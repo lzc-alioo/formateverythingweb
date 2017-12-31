@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="stylesheet" href="jquery-confirm.css" >
+</head>
+<body>
+
+<button class="btnSearch1" >alert对话框</button>
+<button class="btnSearch" >搜索</button>
+<button class="btnSearch" >搜索</button>
+<button class="btnSearch" >搜索</button>
+<script type="text/javascript" src="jquery-1.11.1.js"></script>
+<script type="text/javascript" src="jquery-confirm.js"></script>
+<script type="text/javascript">
+    $(".btnSearch1").click(function(){
+        $.alert({
+            title: 'Error!',
+            content: "请选择要操作的记录"
+        });
+
+    });
+</script>
+</body>
+</html>

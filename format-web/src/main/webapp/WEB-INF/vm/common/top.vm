@@ -1,0 +1,14 @@
+<div class="header">
+    <div class="header-left">
+        <div class="nav">
+            <a href="/" class="logo"><img src="/static/image/logo.png"></a>
+        </div>
+    </div>
+    <div class="header-right">
+        <div class="now"><img src="/static/image/now.png"></div>
+        <div class="updown">
+            <div class="updown-time">14:00</div>
+            <div class="updown-week">星期三</div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,14 @@
+html都是自己写的
+css都是自己写的
+js msg,upload相关的是参考的https://daojia.jd.com/activity/ethicals/index.html?orderId=604061400000211
+
+js略有优化
+//imageBox.prepend(li);
+//改进一下，当单击某个li进行上传图片时，形成给人的感觉就是在当前li上添加了图片，而不是添加到最前面
+imageBox.find("li").last().before(li);
+
+实现了服务端接收图片的功能
+
+目前写解决了上传，核验问题还没有整完
+
+

@@ -1,0 +1,76 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+.none{
+    display: none !important;
+}
+/**实际测试使用伪类清除浮动时需要加上content:" ";display:block;这两句话*/
+.clearfix:after {
+    content:" ";
+    display:block;
+    clear: both;
+}
+.tip{
+    /*display: none;*/
+    position: absolute;
+    font-size: 12px;
+    line-height:30px;
+    padding-left: 5px;
+}
+
+body{
+    background: #000000;
+}
+.lf {
+    float: left;
+    /*text-align: center;*/
+}
+.history , .statistic{
+    width: 230px;
+    min-height: 650px;
+    color: #ffffff;
+    margin-top: 70px;
+    border-left: 1px solid #f0f0f0;
+}
+.history .history-title,.statistic .statistic-title{
+    padding-bottom: 20px;
+    padding-left: 10px;
+    font-size: 22px;
+    color: #ffffff;
+}
+.history .history-data,.statistic .statistic-data{
+    font-size: 20px;
+    text-align: left;
+    padding-left: 10px;
+}
+.history-data .history-tip{
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    line-height: 30px;
+    text-align: right;
+    color: #FF2F2F;
+    padding-right: 10px;
+}
+
+.history-data .history-text{
+    display: inline-block;
+    width: 160px;
+    height: 30px;
+    line-height: 30px;
+    color: #ffffff;
+    cursor: pointer;
+    padding-left: 10px;
+}
+.history .history-data .history-text:hover{
+    border-bottom: 1px solid #fff;
+}
+.statistic .statistic-data div{
+    height: 30px;
+    line-height: 30px;
+}
+.statistic .statistic-data div span{
+    padding-left: 10px;
+}
+
