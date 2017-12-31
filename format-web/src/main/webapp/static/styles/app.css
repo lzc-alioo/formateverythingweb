@@ -99,7 +99,7 @@ html, body {
 }
 .header-right {
     float: right;
-    margin-right: 30px;
+    margin-right: 10px;
 }
 
 /**这里的>指的是只作用于下一级元素*/
@@ -109,7 +109,7 @@ html, body {
 .header-right .now{
     height: 24px;
     margin-top: 11px;
-    margin-right: 10px;
+    margin-right: 4px;
 }
 .updown{
     padding-top:11px;

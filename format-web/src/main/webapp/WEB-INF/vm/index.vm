@@ -21,16 +21,17 @@
 
     <style type="text/css">
         .tool-box{
-            padding: 0 50px 0 50px;
+            padding: 0 5% 0 5%;
             margin-top:150px;
         }
         .tool-box li{
-            width: 25%;
-            float:left;
+            width: 50%;
+            float: left;
+            margin: 20px 0 20px 0;
         }
         .tool{
             background-color:#fff;
-            padding-top: 40px;
+            padding-top: 20px;
             padding-bottom: 20px;
             margin-right: 30px;
             margin-left: 30px;

@@ -3,6 +3,10 @@
 <html>
 <head lang="en">
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+##    <meta name="x5-page-mode" content="app">
+##    <meta name="x5-fullscreen" content="true">
+
     <title>计时器</title>
     <meta name="description" content="计时器,秒表,timer,超级好用的计时器">
     <meta name="Keywords" content="计时器,秒表,timer,超级好用的计时器">
@@ -52,14 +56,6 @@
                     <!--<div><span class="history-tip">1</span><span class="history-text">00:00.738<span class='tip'>双击删除我吧</span></span></div>-->
                 </div>
             </div>
-##            <div class="lf statistic">
-##                <div class="statistic-title">统计数据</div>
-##                <div class="statistic-data none">
-##                    <div class="fast">最快用时<span></span></div>
-##                    <div class="slow">最慢用时<span></span></div>
-##                    <div class="average">平均用时<span></span></div>
-##                </div>
-##            </div>
 
         </div>
     </div>
