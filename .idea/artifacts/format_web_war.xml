@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="format-web:war">
+    <output-path>$PROJECT_DIR$/format-web/target</output-path>
+    <root id="archive" name="lzc-format-web-1.0-SNAPSHOT.war">
+      <element id="artifact" artifact-name="format-web:war exploded" />
+    </root>
+  </artifact>
+</component>
