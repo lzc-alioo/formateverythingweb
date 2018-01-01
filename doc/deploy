@@ -1,0 +1,17 @@
+#脚本位置：/export/home/tomcat/sh/f.alioo.online/deploy
+
+# 之前已经将war包上传到指定目录/root/temp
+# rz format-web-1.0-SNAPSHOT.war /root/temp/
+
+rm -rf /export/packages/format-web-1.0.0-SNAPSHOT.war
+cp /root/temp/format-web-1.0.0-SNAPSHOT.war /export/packages/
+cd  /export/packages/
+unzip format-web-1.0.0-SNAPSHOT.war -d f.alioo.online
+mvl f.alioo.online
+newpathname=`ls| grep f.alioo.online|tail -n 1`
+rm -rf /export/data/tomcatRoot/f.alioo.online
+ln -s /export/packages/${newpathname}  /export/data/tomcatRoot/f.alioo.online
+
+/export/home/tomcat/sh/f.alioo.online/tomcat restart
+
+
