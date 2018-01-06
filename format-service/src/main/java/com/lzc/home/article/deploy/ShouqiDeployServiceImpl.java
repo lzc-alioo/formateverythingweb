@@ -41,8 +41,8 @@ public class ShouqiDeployServiceImpl implements DeployService {
     @Value(value = "${shouqiCookieStr}")
     private String cookieStr;
 
-    private String startDate="2017-12-30";
-    private String endDate="2017-12-31";
+    private String startDate="2018-01-03";
+    private String endDate="2018-01-04";
 
     public void deploy() {
 
@@ -54,20 +54,23 @@ public class ShouqiDeployServiceImpl implements DeployService {
         //sublime 转带BOM的csv
         //excel 转成excel
         //vlookup
-        String path = "/export/Logs/f.alioo.online/" + time + ".csv";
+        String rootpath="/export/Logs/f.alioo.online/";
+
+        String path = rootpath + time + ".csv";
         writeFileWithBom(path, dataList);
 
-        String userpath="/Users/alioo/mygit/lzc-format/lzc-format-service/src/main/resources/user.data";
+        //String userpath="/Users/alioo/mygit/lzc-format/lzc-format-service/src/main/resources/user.data";
+        String userpath="E:\\github\\formateverythingweb\\format-service\\src\\main\\resources\\user.data";
         List<String> userList = readFile(userpath);
 
         List<String> newList=filter(dataList,userList);
 
-        String newpath = "/export/Logs/f.alioo.online/" + time + "-2"+".csv";
+        String newpath =rootpath+ time + "-2"+".csv";
         writeFileWithBom(newpath, newList);
 
         List<String> newList2=filtertime(newList);
 
-        String newpath2 = "/export/Logs/f.alioo.online/" + time + "-3"+".csv";
+        String newpath2 = rootpath+ time + "-3"+".csv";
         writeFileWithBom(newpath2, newList2);
 
 //        //test
@@ -233,7 +236,8 @@ public class ShouqiDeployServiceImpl implements DeployService {
 
             boolean flag=false;
             for(String userName:userlist){
-                if(name.indexOf(userName)>-1){
+                //if(name.indexOf(userName)>-1){
+                if(name.equals(userName)||name.equals(userName+"-xhb")){
                     flag=true;
                     break;
                 }
