@@ -41,8 +41,8 @@ public class ShouqiDeployServiceImpl implements DeployService {
     @Value(value = "${shouqiCookieStr}")
     private String cookieStr;
 
-    private String startDate="2018-01-04";
-    private String endDate="2018-01-05";
+    private String startDate="2018-01-07";
+    private String endDate="2018-01-08";
 
     public void deploy() {
 
@@ -59,9 +59,8 @@ public class ShouqiDeployServiceImpl implements DeployService {
         String path = rootpath + time + ".csv";
         writeFileWithBom(path, dataList);
 
-        String userpath="/Users/alioo/mygithub/formateverythingweb/format-service/src/main/resources/user.data";
-//        String userpath="/Users/alioo/mygit/lzc-format/lzc-format-service/src/main/resources/user.data";
-//        String userpath="E:\\github\\formateverythingweb\\format-service\\src\\main\\resources\\user.data";
+        //String userpath="/Users/alioo/mygithub/formateverythingweb/format-service/src/main/resources/user.data";
+        String userpath="E:\\github\\formateverythingweb\\format-service\\src\\main\\resources\\user.data";
         List<String> userList = readFile(userpath);
 
         List<String> newList=filter(dataList,userList);
