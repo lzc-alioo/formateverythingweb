@@ -41,8 +41,8 @@ public class ShouqiDeployServiceImpl implements DeployService {
     @Value(value = "${shouqiCookieStr}")
     private String cookieStr;
 
-    private String startDate="2018-01-07";
-    private String endDate="2018-01-08";
+    private String startDate="2018-01-12";
+    private String endDate="2018-01-15";
 
     public void deploy() {
 
