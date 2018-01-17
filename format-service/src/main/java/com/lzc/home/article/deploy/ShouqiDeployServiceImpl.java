@@ -1,12 +1,7 @@
 package com.lzc.home.article.deploy;
 
-import com.jd.o2o.commons.domain.PageBean;
 import com.jd.o2o.commons.utils.DateTimeUtil;
-import com.jd.o2o.commons.utils.file.FileUtils;
-import com.lzc.home.article.launcher.DeployUtil;
 import com.lzc.home.article.launcher.HttpUtil;
-import com.lzc.home.dao.ArticleDao;
-import com.lzc.home.domain.entity.Article;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -15,14 +10,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.util.FileCopyUtils;
-import org.springframework.util.StreamUtils;
 
-import javax.annotation.Resource;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileWriter;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -41,12 +32,27 @@ public class ShouqiDeployServiceImpl implements DeployService {
     @Value(value = "${shouqiCookieStr}")
     private String cookieStr;
 
-    private String startDate="2018-01-12";
-    private String endDate="2018-01-15";
+    //格式"2018-01-15"
+    private String startDate = "";
+
+    //格式"2018-01-16"
+    private String endDate = "";
 
     public void deploy() {
+        //startDate为空时设置成昨天
+        if (startDate == null || startDate.isEmpty()) {
+            startDate = DateTimeUtil.getPreviousDateString(); //"2018-01-15"
+        }
 
-        String time ="("+endDate+")"+ DateTimeUtil.getDateTime14String();
+        //endDate为空时设置成今天
+        if (endDate == null || endDate.isEmpty()) {
+            endDate = DateTimeUtil.getDateString(); //"2018-01-16"
+        }
+
+        logger.info("startDate=" + startDate);
+        logger.info("endDate=" + endDate);
+
+        String time = "(" + endDate + ")" + DateTimeUtil.getDateTime14String();
 
         List<String> dataList = postlist(cookieStr);
 
@@ -54,23 +60,23 @@ public class ShouqiDeployServiceImpl implements DeployService {
         //sublime 转带BOM的csv
         //excel 转成excel
         //vlookup
-        String rootpath="/export/Logs/f.alioo.online/";
+        String rootpath = "/export/Logs/f.alioo.online/";
 
         String path = rootpath + time + ".csv";
         writeFileWithBom(path, dataList);
 
         //String userpath="/Users/alioo/mygithub/formateverythingweb/format-service/src/main/resources/user.data";
-        String userpath="E:\\github\\formateverythingweb\\format-service\\src\\main\\resources\\user.data";
+        String userpath = "E:\\github\\formateverythingweb\\format-service\\src\\main\\resources\\user.data";
         List<String> userList = readFile(userpath);
 
-        List<String> newList=filter(dataList,userList);
+        List<String> newList = filter(dataList, userList);
 
-        String newpath =rootpath+ time + "-2"+".csv";
+        String newpath = rootpath + time + "-2" + ".csv";
         writeFileWithBom(newpath, newList);
 
-        List<String> newList2=filtertime(newList);
+        List<String> newList2 = filtertime(newList);
 
-        String newpath2 = rootpath+ time + "-3"+".csv";
+        String newpath2 = rootpath + time + "-3" + ".csv";
         writeFileWithBom(newpath2, newList2);
 
 //        //test
@@ -85,7 +91,7 @@ public class ShouqiDeployServiceImpl implements DeployService {
 
     }
 
-    public  List<String> postlist(String cookieStr) {
+    public List<String> postlist(String cookieStr) {
         String graspTime = DateTimeUtil.getDateTime14String();
 
 
@@ -197,7 +203,7 @@ public class ShouqiDeployServiceImpl implements DeployService {
     }
 
 
-    public  List<String> getPageData(int page, Document doc) {
+    public List<String> getPageData(int page, Document doc) {
         List<String> dataList = new ArrayList<String>();
 
         Element dataTable = doc.getElementsByClass("dataTable").get(0);
@@ -215,8 +221,10 @@ public class ShouqiDeployServiceImpl implements DeployService {
             String createtime = tds.get(4).text();
 
             String data = car + "," + name + "," + action + "," + createtime;
-            if(i==1){
-                logger.info("page(" + page + ")####" + data);
+            if (i == 1) {
+                if (page % 5 == 0) { //减少日志输出
+                    logger.info("page(" + page + ")####" + data);
+                }
             }
             dataList.add(data);
         }
@@ -224,7 +232,7 @@ public class ShouqiDeployServiceImpl implements DeployService {
         return dataList;
     }
 
-       List<String>  filter(List<String> datalist,List<String> userlist){
+    List<String> filter(List<String> datalist, List<String> userlist) {
         List<String> newList = new ArrayList<String>();
 
         for (int i = 0; i < datalist.size(); i++) {
@@ -234,15 +242,15 @@ public class ShouqiDeployServiceImpl implements DeployService {
             //京QL32K9,张旭,关门,2017-12-25 10:59:52
             String name = tmparr[1];
 
-            boolean flag=false;
-            for(String userName:userlist){
+            boolean flag = false;
+            for (String userName : userlist) {
                 //if(name.indexOf(userName)>-1){
-                if(name.equals(userName)||name.equals(userName+"-xhb")){
-                    flag=true;
+                if (name.equals(userName) || name.equals(userName + "-xhb")) {
+                    flag = true;
                     break;
                 }
             }
-            if(flag){
+            if (flag) {
                 newList.add(data);
 
             }
@@ -251,7 +259,7 @@ public class ShouqiDeployServiceImpl implements DeployService {
 
     }
 
-       List<String>  filtertime(List<String> newlist){
+    List<String> filtertime(List<String> newlist) {
         List<String> newList2 = new ArrayList<String>();
 
         for (int i = 0; i < newlist.size(); i++) {
@@ -262,7 +270,7 @@ public class ShouqiDeployServiceImpl implements DeployService {
             String datetimestr = tmparr[3];
 //            String timerstr = datetimestr.split(" ")[1];
 
-            if(datetimestr.compareTo(startDate+" 12:00:00")>=0 && datetimestr.compareTo(endDate+" 12:00:00")<=0){
+            if (datetimestr.compareTo(startDate + " 12:00:00") >= 0 && datetimestr.compareTo(endDate + " 12:00:00") <= 0) {
                 newList2.add(data);
 
             }
@@ -291,11 +299,11 @@ public class ShouqiDeployServiceImpl implements DeployService {
         }
     }
 
-    private void writeFileWithBom( String path, List<String> list) {
+    private void writeFileWithBom(String path, List<String> list) {
 
         try {
             FileWriter fw = new FileWriter(path);
-            fw.write(new String(  new byte[]{(byte)0xEF, (byte)0xBB, (byte)0xBF})   );
+            fw.write(new String(new byte[]{(byte) 0xEF, (byte) 0xBB, (byte) 0xBF}));
 
             for (String str : list) {
                 fw.write(str);
@@ -309,6 +317,7 @@ public class ShouqiDeployServiceImpl implements DeployService {
             e.printStackTrace();
         }
     }
+
     static List<String> readFile(String path) {
         List<String> list = new ArrayList<String>();
         try {
