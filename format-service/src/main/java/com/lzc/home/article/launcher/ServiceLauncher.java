@@ -28,7 +28,7 @@ public class ServiceLauncher {
         DeployService deployService = null;
         try {
 
-//            deployService = SpringContextHolder.getBean("csdnDeployServiceImpl");
+            //deployService = SpringContextHolder.getBean("csdnDeployServiceImpl");
             deployService = SpringContextHolder.getBean("shouqiDeployServiceImpl");
             deployService.deploy();
 

@@ -28,42 +28,42 @@ public class CsdnDeployServiceImpl implements DeployService {
     public void deploy() {
 
         List<Article> list = DeployUtil.postlist(null);
-//        for (int i=0;i<list.size();i++) {
-//            Article e=list.get(i);
-//            logger.info("["+i+"]准备插入e"+ e);
-//            articleDao.insert(e);
-//        }
+        for (int i=0;i<list.size();i++) {
+            Article e=list.get(i);
+            logger.info("["+i+"]准备插入e"+ e);
+            articleDao.insert(e);
+        }
 
         //Article e = new Article();
         //e.setCsdnLink("http://blog.csdn.net/hl_java/article/details/78344667");
         //DeployUtil.getContent(e, cookieStr);
 
 
-        Article articleParam = null;
-        PageBean<Article> pageBean = null;
-        try {
-            pageBean = new PageBean<Article>();
-            pageBean.setPageNo(1);
-            pageBean.setPageSize(10000);
-            articleParam = new Article();
-
-            pageBean = articleDao.pageQuery(articleParam, pageBean.getPageNo(), pageBean.getPageSize());
-        } catch (Exception e) {
-            logger.error("操作时异常", e);
-            return;
-        }
-        List<Article> list2 = pageBean.getResultList();
-        logger.info("数据加载完成，总条数：" + list2.size());
-        int i = 0;
-        try {
-            for (i = 0; i < list2.size(); i++) {
-                Article e = list2.get(i);
-                e = DeployUtil.getContent(e, null);
-//                articleDao.update(e);
-            }
-        } catch (Exception e) {
-            logger.error("操作时异常[i=" + i + ",content.length=" + list2.get(i).getContent().length() + "]", e);
-        }
+//        Article articleParam = null;
+//        PageBean<Article> pageBean = null;
+//        try {
+//            pageBean = new PageBean<Article>();
+//            pageBean.setPageNo(1);
+//            pageBean.setPageSize(10000);
+//            articleParam = new Article();
+//
+//            pageBean = articleDao.pageQuery(articleParam, pageBean.getPageNo(), pageBean.getPageSize());
+//        } catch (Exception e) {
+//            logger.error("操作时异常", e);
+//            return;
+//        }
+//        List<Article> list2 = pageBean.getResultList();
+//        logger.info("数据加载完成，总条数：" + list2.size());
+//        int i = 0;
+//        try {
+//            for (i = 0; i < list2.size(); i++) {
+//                Article e = list2.get(i);
+//                e = DeployUtil.getContent(e, null);
+////                articleDao.update(e);
+//            }
+//        } catch (Exception e) {
+//            logger.error("操作时异常[i=" + i + ",content.length=" + list2.get(i).getContent().length() + "]", e);
+//        }
 
 
     }

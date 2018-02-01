@@ -136,7 +136,7 @@
 
 		<dependency>
 			<groupId>com.alioo</groupId>
-			<artifactId>format-util</artifactId>
+			<artifactId>format</artifactId>
 			<version>1.0-SNAPSHOT</version>
 		</dependency>
 	</dependencies>

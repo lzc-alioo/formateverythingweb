@@ -33,7 +33,7 @@ public class ShouqiDeployServiceImpl implements DeployService {
     private String cookieStr;
 
     //格式"2018-01-15"
-    private String startDate = "";
+    private String startDate = "2018-01-30";
 
     //格式"2018-01-16"
     private String endDate = "";
@@ -124,7 +124,7 @@ public class ShouqiDeployServiceImpl implements DeployService {
 
 
         String result = HttpUtil.httpPost(url, requestParams, headerMap, "UTF-8");
-//        logger.info("result=\n" + result);
+        logger.info("result=\n" + result);
 
         Document doc = Jsoup.parse(result);
 //        boolean needReLogin = doc.text().contains("帐号登录");
