@@ -4,7 +4,12 @@
 	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
 
 	<display-name>myWebName</display-name>
-	
+
+	<listener>
+		<listener-class>org.springframework.web.util.IntrospectorCleanupListener</listener-class>
+	</listener>
+
+
 	<!-- listeners -->
 	<listener>
 		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
@@ -13,14 +18,7 @@
 		<param-name>contextConfigLocation</param-name>
 		<param-value>classpath:spring-config.xml</param-value>
 	</context-param>
-    <context-param>
-        <param-name>spring.profiles.active</param-name>
-        <param-value>development</param-value>
-    </context-param>
-	<listener>
-		<listener-class>org.springframework.web.util.IntrospectorCleanupListener</listener-class>
-	</listener>
-	
+
 	<!--servlet -->
 	<servlet>
 		<servlet-name>myWebName</servlet-name>
@@ -29,12 +27,15 @@
 			<param-name>contextConfigLocation</param-name>
 			<param-value>classpath:spring-config-mvc.xml</param-value>
 		</init-param>
+		<!-- 1或者大于0的数字：容器启动时初始化该servlete，调用其init方法-->
+		<!-- 0或者未配置，第一次访问servlet的时候初始化该servlet -->
 		<load-on-startup>1</load-on-startup>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>myWebName</servlet-name>
 		<url-pattern>/*</url-pattern>
 	</servlet-mapping>
+
 	<!--<servlet-mapping>-->
 		<!--<servlet-name>myWebName</servlet-name>-->
 		<!--<url-pattern>*.html</url-pattern>-->

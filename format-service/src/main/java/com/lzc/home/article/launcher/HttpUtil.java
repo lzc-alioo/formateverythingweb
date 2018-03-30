@@ -2,13 +2,16 @@ package com.lzc.home.article.launcher;
 
 
 import org.apache.http.HttpEntity;
+import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
@@ -130,6 +133,72 @@ public class HttpUtil {
         return result;
     }
 //
+public static String httpPostBody(String url, Map<String, Object> headerMap, String body, String urlEncode) {
+
+    HttpPost httpPost = null;
+    String result = null;
+    try {
+//        // 参数设置
+//        List<NameValuePair> params = new ArrayList<NameValuePair>();
+//        for (Map.Entry<String, Object> entry : requestParams.entrySet()) {
+//            Object obj = entry.getValue();
+//            if (obj instanceof String[]) {
+//                String[] tmp = (String[]) obj;
+//                for (int i = 0; i < tmp.length; i++) {
+//                    params.add(new BasicNameValuePair(entry.getKey(),
+//                            tmp[i]));
+//                }
+//            } else {
+//                params.add(new BasicNameValuePair(entry.getKey(),
+//                        (String) entry.getValue()));
+//            }
+//        }
+
+
+
+        httpPost = new HttpPost(url);
+//        httpPost.setEntity(new UrlEncodedFormEntity(params, urlEncode));
+        httpPost.setEntity(new StringEntity(body,urlEncode));
+
+
+        for (Map.Entry<String, Object> entry : headerMap.entrySet()) {
+            httpPost.setHeader(entry.getKey(), (String)entry.getValue());
+        }
+
+//            logger.debug("httpPost request " + httpPost.getURI());
+
+//            if (cookieStr != null) {
+//                httpPost.setHeader("Cookie", cookieStr);
+//            }
+
+        HttpHost proxy = new HttpHost("192.168.191.1", 8888,"https");
+        RequestConfig config = RequestConfig.custom().setProxy(proxy).setConnectTimeout(1 * 1000 * 60).build();
+
+        httpPost.setConfig( config );
+
+        // reponse header
+        HttpResponse response = httpClient.execute(httpPost);
+//            System.out.println(response.getStatusLine().getStatusCode());
+
+        // 网页内容
+        HttpEntity httpEntity = response.getEntity();
+
+        result = EntityUtils.toString(httpEntity);
+//            System.out.println(result);
+
+    } catch (UnsupportedEncodingException e) {
+        e.printStackTrace();
+    } catch (ClientProtocolException e) {
+        e.printStackTrace();
+    } catch (IOException e) {
+        e.printStackTrace();
+    } finally {
+        if (httpPost != null) {
+            httpPost.abort();
+        }
+    }
+    return result;
+}
 
     public static String httpPost(String url, Map<String, Object> requestParams, Map<String, Object> headerMap, String urlEncode) {
 

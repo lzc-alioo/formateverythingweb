@@ -24,6 +24,9 @@ public class IndexController {
 
     ExecutorService threadPoolExecutor=Executors.newFixedThreadPool(2);
 
+    public IndexController( ) {
+        logger.info("构造器IndexController执行"+this);
+    }
 
     /**
      * 主页
@@ -36,7 +39,7 @@ public class IndexController {
     public String index(HttpServletRequest request, HttpServletResponse response, ModelMap model) {
         String result = "index";
 
-        logger.debug("request /");
+        logger.info("request /,this="+this);
         return result;
     }
 
@@ -45,7 +48,7 @@ public class IndexController {
         //String result = "redirect:/format/index";
         String result = "index";
 
-        logger.debug("request /index");
+        logger.info("request /index,this="+this);
         return result;
     }
 

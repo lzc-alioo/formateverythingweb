@@ -64,7 +64,7 @@
         <AsyncLogger name="org.springframework" level="INFO" includeLocation="true" additivity="false">
             <AppenderRef ref="framework-output"/>
         </AsyncLogger>
-        <AsyncLogger name="org.apache" level="INFO" includeLocation="true" additivity="true">
+        <AsyncLogger name="org.apache" level="DEBUG" includeLocation="true" additivity="true">
             <AppenderRef ref="framework-output"/>
         </AsyncLogger>
         <!-- log4jdbc -->

@@ -38,7 +38,7 @@
         </RollingRandomAccessFile>
     </Appenders>
     <Loggers>
-        <AsyncRoot level="debug" includeLocation="true">
+        <AsyncRoot level="DEBUG" includeLocation="true">
             <AppenderRef ref="stdout"/>
         </AsyncRoot>
         <!-- log4spring -->

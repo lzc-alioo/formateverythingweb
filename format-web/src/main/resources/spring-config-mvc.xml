@@ -39,7 +39,6 @@
     </bean>
 
     <context:component-scan base-package="com.lzc.home.controller">
-        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Service" />
     </context:component-scan>
 
     <mvc:resources location="/static/" mapping="/static/**" cache-period="864000"/>
