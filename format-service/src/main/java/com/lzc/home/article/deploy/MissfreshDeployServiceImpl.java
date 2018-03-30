@@ -74,23 +74,23 @@ public class MissfreshDeployServiceImpl implements DeployService {
         String url = "http://as-vip.missfresh.cn//v2/product/home/index?device_id=23c452d99005c7dfdabf55d9625a443b&env=web&fromSource=baiduzd01&platform=web&thirdParams=eyJmcm9tU291cmNlIjoiYmFpZHV6ZDAxIn0%3D&uuid=23c452d99005c7dfdabf55d9625a443b&version=4.2.0.1";
 
         Map<String, Object> headerMap = new HashMap<String, Object>();
-        headerMap.put("Connection", "keep-alive");
-        headerMap.put("Pragma", "no-cache");
-        headerMap.put("Cache-Control", "no-cache");
-        headerMap.put("Origin", "https://as-vip.missfresh.cn");
-        headerMap.put("user-agent", "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Mobile Safari/537.36");
-        headerMap.put("X-Tingyun-Id", "Q1KLryMuSto;r=90960552");
-        headerMap.put("Content-Type", "application/json;charset=UTF-8");
-        headerMap.put("Accept", "application/json, text/plain, */*");
-        headerMap.put("x-region", "{\"station_code\":\"MRYX|mryx_yzpx\",\"address_code\":110115}");
-        headerMap.put("platform", "web");
-        headerMap.put("version", "4.2.0.1");
-        headerMap.put("Referer", "https://as-vip.missfresh.cn/frontend/");
-        headerMap.put("accept-encoding", "gzip, deflate, br");
-        headerMap.put("accept", "application/json, text/plain, */*");
-        headerMap.put("Accept-Language", "zh-CN,zh;q=0.9,en;q=0.8");
-        headerMap.put("cache-control", "no-cache");
-        headerMap.put("Cookie", cookieStr);
+//        headerMap.put("Connection", "keep-alive");
+//        headerMap.put("Pragma", "no-cache");
+//        headerMap.put("Cache-Control", "no-cache");
+//        headerMap.put("Origin", "https://as-vip.missfresh.cn");
+//        headerMap.put("user-agent", "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Mobile Safari/537.36");
+//        headerMap.put("X-Tingyun-Id", "Q1KLryMuSto;r=90960552");
+//        headerMap.put("Content-Type", "application/json;charset=UTF-8");
+//        headerMap.put("Accept", "application/json, text/plain, */*");
+//        headerMap.put("x-region", "{\"station_code\":\"MRYX|mryx_yzpx\",\"address_code\":110115}");
+//        headerMap.put("platform", "web");
+//        headerMap.put("version", "4.2.0.1");
+//        headerMap.put("Referer", "https://as-vip.missfresh.cn/frontend/");
+//        headerMap.put("accept-encoding", "gzip, deflate, br");
+//        headerMap.put("accept", "application/json, text/plain, */*");
+//        headerMap.put("Accept-Language", "zh-CN,zh;q=0.9,en;q=0.8");
+//        headerMap.put("cache-control", "no-cache");
+//        headerMap.put("Cookie", cookieStr);
 
 //        HashMap<String, Object> requestParams = new HashMap<String, Object>();
 //        device_id: 05cfdbecedb09b15246eaaee656ad5f3
@@ -117,7 +117,8 @@ public class MissfreshDeployServiceImpl implements DeployService {
 //        requestParams.put("lat", "39.79506");
 //        requestParams.put("lng", "116.50951");
 
-        String body="{lat: 39.76019, lng: 116.31019} ";
+//        String body="\n{lat: 39.76019, lng: 116.31019}";
+        String body="{lat: \"\"}";
 
         String result = HttpUtil.httpPostBody(url, headerMap, body, "GBK");
         logger.info("result=\n" + result);
