@@ -82,7 +82,7 @@ public class HttpUtil {
     }
 
 
-    public static String httpGet(String url, Map<String, Object> requestParams, Map<String, Object> headerMap) {
+    public static String httpGet(String url, Map<String, Object> requestParams, Map<String, Object> headerMap, String urlEncode) {
 
         HttpGet httpGet = null;
         String result = null;
@@ -119,7 +119,7 @@ public class HttpUtil {
             // 网页内容
             HttpEntity httpEntity = response.getEntity();
 
-            result = EntityUtils.toString(httpEntity);
+            result = EntityUtils.toString(httpEntity,urlEncode);
 
         } catch (ClientProtocolException e) {
             e.printStackTrace();
