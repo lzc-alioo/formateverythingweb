@@ -155,19 +155,20 @@ public class HttpUtil {
         HttpGet httpGet = null;
         String result = null;
         try {
+            String tmpUrl =null;
             // 参数设置
             StringBuilder builder = new StringBuilder(url);
-            builder.append("?");
-            for (Map.Entry<String, Object> entry : requestParams.entrySet()) {
-                builder.append((String) entry.getKey());
-                builder.append("=");
-                builder.append((String) entry.getValue());
-                builder.append("&");
+            if (requestParams!=null&&requestParams.size()>0){
+                builder.append("?");
+                for (Map.Entry<String, Object> entry : requestParams.entrySet()) {
+                    builder.append((String) entry.getKey());
+                    builder.append("=");
+                    builder.append((String) entry.getValue());
+                    builder.append("&");
+                }
+                builder.deleteCharAt(builder.length()-1);
             }
-
-            String tmpUrl = builder.toString();
-            tmpUrl = tmpUrl.substring(0, tmpUrl.length() - 1);
-
+            tmpUrl = builder.toString();
             httpGet = new HttpGet(tmpUrl);
 
             logger.debug("executing request " + httpGet.getURI());

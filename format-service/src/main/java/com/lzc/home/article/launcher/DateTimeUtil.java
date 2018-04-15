@@ -384,6 +384,9 @@ public class DateTimeUtil {
         return toDateTimeString(new Date(), format);
     }
 
+
+
+
     /**
      * 取得当前的日期时间字符串YYYY/MM/DD HH:mm:ss (移动)
      *
