@@ -13,13 +13,14 @@
            http://www.springframework.org/schema/context/spring-context-3.1.xsd
            http://www.springframework.org/schema/aop
            http://www.springframework.org/schema/aop/spring-aop-3.1.xsd">
-           
+
     <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
         <property name="driverClassName" value="${mvn.jdbc.driver}"/>
         <property name="url" value="${mvn.jdbc.url}"/>
         <property name="username" value="${imp.jdbc.username}"/>
         <property name="password" value="${imp.jdbc.password}"/>
-        <property name="connectionProperties" value="useUnicode=true;characterEncoding=utf8;zeroDateTimeBehavior=convertToNull;rewriteBatchedStatements=true;socketTimeout=160000;autoReconnectForPools=true"/>
+        <property name="connectionProperties"
+                  value="useUnicode=true;characterEncoding=utf8;zeroDateTimeBehavior=convertToNull;rewriteBatchedStatements=true;socketTimeout=160000;autoReconnectForPools=true"/>
         <property name="minEvictableIdleTimeMillis" value="1800000"/>
         <property name="initialSize" value="10"/>
         <property name="maxActive" value="50"/>
@@ -40,14 +41,14 @@
     </bean>
 
     <!-- transaction manager -->
-  <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
-    <constructor-arg ref="dataSource"></constructor-arg>
-  </bean>
-  
-  <bean id="transactionTemplate" class="org.springframework.transaction.support.TransactionTemplate">
-    <constructor-arg ref="transactionManager"></constructor-arg>
-  </bean>
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <constructor-arg ref="dataSource"></constructor-arg>
+    </bean>
 
-  <tx:annotation-driven transaction-manager="transactionManager" proxy-target-class="true" />
+    <bean id="transactionTemplate" class="org.springframework.transaction.support.TransactionTemplate">
+        <constructor-arg ref="transactionManager"></constructor-arg>
+    </bean>
+
+    <tx:annotation-driven transaction-manager="transactionManager" proxy-target-class="true"/>
 
 </beans>

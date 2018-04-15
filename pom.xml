@@ -3,11 +3,11 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <parent>
-        <groupId>com.jd.o2o</groupId>
-        <artifactId>o2o-project-parent</artifactId>
-        <version>1.0.0-SNAPSHOT</version>
-    </parent>
+    <!--<parent>-->
+    <!--<groupId>com.jd.o2o</groupId>-->
+    <!--<artifactId>o2o-project-parent</artifactId>-->
+    <!--<version>1.0.0-SNAPSHOT</version>-->
+    <!--</parent>-->
 
     <groupId>com.lzc</groupId>
     <artifactId>format</artifactId>
@@ -36,6 +36,25 @@
         <!--<ump.profiler.version>3.2.0</ump.profiler.version>-->
         <!--<jd.jmq.version>1.2.27</jd.jmq.version>-->
         <!--<deploy-configurer.version>1.2</deploy-configurer.version>-->
+        <!--mybatis-->
+        <mybatis.version>3.0.5</mybatis.version>
+        <mybatis-spring.version>1.0.1</mybatis-spring.version>
+        <!-- data base -->
+        <dbcp.version>1.4</dbcp.version>
+        <mysql.driver.version>5.1.18</mysql.driver.version>
+        <aspectj.version>1.6.11</aspectj.version>
+        <cglib.version>3.1</cglib.version>
+        <servlet.version>2.4</servlet.version>
+        <jsp.version>2.0</jsp.version>
+        <velocity.version>1.7</velocity.version>
+        <velocity-tools.version>2.0</velocity-tools.version>
+        <commons-digester.version>2.1</commons-digester.version>
+        <spring.version>3.2.4.RELEASE</spring.version>
+        <junit.version>4.10</junit.version>
+        <joda-time.version>2.3</joda-time.version>
+        <javassist.version>3.9.0.GA</javassist.version>
+        <jackson.version>1.9.7</jackson.version>
+
     </properties>
 
     <distributionManagement>
@@ -142,7 +161,61 @@
                 <artifactId>jackson-all</artifactId>
                 <version>${jackson.version}</version>
             </dependency>
-             </dependencies>
+            <!-- data base -->
+            <dependency>
+                <groupId>commons-dbcp</groupId>
+                <artifactId>commons-dbcp</artifactId>
+                <version>${dbcp.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>mysql</groupId>
+                <artifactId>mysql-connector-java</artifactId>
+                <version>${mysql.driver.version}</version>
+            </dependency>
+            <!--mybatis-->
+            <dependency>
+                <groupId>org.mybatis</groupId>
+                <artifactId>mybatis</artifactId>
+                <version>${mybatis.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.mybatis</groupId>
+                <artifactId>mybatis-spring</artifactId>
+                <version>${mybatis-spring.version}</version>
+            </dependency>
+            <!--reflection-->
+            <dependency>
+                <groupId>org.aspectj</groupId>
+                <artifactId>aspectjrt</artifactId>
+                <version>${aspectj.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.aspectj</groupId>
+                <artifactId>aspectjweaver</artifactId>
+                <version>${aspectj.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>cglib</groupId>
+                <artifactId>cglib</artifactId>
+                <version>${cglib.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>javassist</groupId>
+                <artifactId>javassist</artifactId>
+                <version>${javassist.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>joda-time</groupId>
+                <artifactId>joda-time</artifactId>
+                <version>${joda-time.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <version>${junit.version}</version>
+            </dependency>
+
+        </dependencies>
     </dependencyManagement>
 
     <profiles>

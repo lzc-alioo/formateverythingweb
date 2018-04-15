@@ -31,7 +31,7 @@ public class ServiceLauncher {
             //deployService = SpringContextHolder.getBean("csdnDeployServiceImpl");
 //            deployService = SpringContextHolder.getBean("shouqiDeployServiceImpl");
 //            deployService = SpringContextHolder.getBean("missfreshDeployServiceImpl");
-            deployService = SpringContextHolder.getBean("routeDeployServiceImpl");
+            deployService = SpringContextHolder.getBean("xueqiuDeployServiceImpl");
             deployService.deploy();
 
         } catch (Exception e) {

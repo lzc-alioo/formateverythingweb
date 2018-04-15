@@ -45,8 +45,8 @@
 
     <mvc:annotation-driven conversion-service="conversionService">
         <mvc:message-converters>
-            <bean  class="org.springframework.http.converter.ByteArrayHttpMessageConverter"/>
-            <bean  class="com.jd.o2o.commons.springmvc.ext.convert.CustomMappingJacksonHttpMessageConverter">
+            <bean class="org.springframework.http.converter.ByteArrayHttpMessageConverter"/>
+            <bean class="com.jd.o2o.commons.springmvc.ext.convert.CustomMappingJacksonHttpMessageConverter">
                 <property name="supportedMediaTypes">
                     <list>
                         <value>application/json</value>
@@ -102,12 +102,12 @@
     </bean>
 
     <!--<bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">-->
-        <!--<property name="basenames">-->
-            <!--<list>-->
-                <!--<value>messages.demo</value>-->
-                <!--<value>messages.common</value>-->
-            <!--</list>-->
-        <!--</property>-->
+    <!--<property name="basenames">-->
+    <!--<list>-->
+    <!--<value>messages.demo</value>-->
+    <!--<value>messages.common</value>-->
+    <!--</list>-->
+    <!--</property>-->
     <!--</bean>-->
 
     <bean id="velocityConfig" class="org.springframework.web.servlet.view.velocity.VelocityConfigurer">
