@@ -33,9 +33,7 @@ import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
+import javax.net.ssl.*;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.KeyManagementException;
@@ -138,10 +136,23 @@ public class HttpUtil {
             e.printStackTrace();
         }
 
+        SSLConnectionSocketFactory sf = new SSLConnectionSocketFactory(sslcontext, new String[] { "TLSv1"},
+                null, new HostnameVerifier(){
+
+            public boolean verify(String hostname, SSLSession session) {
+                hostname = "*.xueqiu.com";
+//                return SSLConnectionSocketFactory.getDefaultHostnameVerifier().verify(hostname, session);
+                return true;
+            }
+
+        });
+
+
         // 设置协议http和https对应的处理socket链接工厂的对象
         Registry<ConnectionSocketFactory> socketFactoryRegistry = RegistryBuilder.<ConnectionSocketFactory>create()
                 .register("http", PlainConnectionSocketFactory.INSTANCE)
-                .register("https", new SSLConnectionSocketFactory(sslcontext))
+//                .register("https", new SSLConnectionSocketFactory(sslcontext))
+                .register("https",sf)
                 .build();
         PoolingHttpClientConnectionManager connManager = new PoolingHttpClientConnectionManager(socketFactoryRegistry);
         HttpClients.custom().setConnectionManager(connManager);

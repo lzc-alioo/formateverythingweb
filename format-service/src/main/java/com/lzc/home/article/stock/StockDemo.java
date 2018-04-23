@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -24,20 +25,91 @@ public class StockDemo {
         List<String> stockList = readFile(rootpath + fileName);
         String filterStr = "0028";
 
-        List<String> newList = filter(stockList, filterStr);
+//        List<String> newList = filter(stockList, filterStr);
 
-        for (int i = 0; i < newList.size(); i++) {
+        List<StockStatistic> resultList = new ArrayList<StockStatistic>();
+        for (int i = 0; i < stockList.size(); i++) {
             String stockString = stockList.get(i);
             String stockStr = stockString.split(",")[0];
+            if (stockStr != null && stockStr.length() > 8) {
+                stockStr = stockStr.substring(stockStr.length() - 8);
+            }
             logger.info("i=" + i + "stockString=" + stockString);
-            one(stockStr);
-
+            StockStatistic stockStatistic = one(stockStr);
+            resultList.add(stockStatistic);
         }
+
+        Collections.sort(resultList, new Comparator<StockStatistic>() {
+            @Override
+            public int compare(StockStatistic o1, StockStatistic o2) {
+                if(o1==null&&o2==null){
+                    return 0;
+                }else if(o1==null&&o2!=null){
+                    return -1;
+                }else if(o1!=null&&o2==null){
+                    return 1;
+                }else  {
+                    long tmp=o1.getValumeAfterAvg()-o2.getValumeAfterAvg();
+                    return (int)tmp;
+                }
+            }
+        });
+        fileName= "stock" + DateTimeUtil.getDateString() + "After.csv";
+        writeFile(rootpath+fileName,resultList);
+
+        //
+        Collections.sort(resultList, new Comparator<StockStatistic>() {
+            @Override
+            public int compare(StockStatistic o1, StockStatistic o2) {
+                if(o1==null&&o2==null){
+                    return 0;
+                }else if(o1==null&&o2!=null){
+                    return -1;
+                }else if(o1!=null&&o2==null){
+                    return 1;
+                }else  {
+                    long a=0;
+                    long b=0;
+                    if(o1.getValumeBeforeAvg()!=0){
+                        a=o1.getValumeAfterAvg()/o1.getValumeBeforeAvg();
+                    }
+                    if(o2.getValumeBeforeAvg()!=0){
+                        b=o2.getValumeAfterAvg()/o2.getValumeBeforeAvg();
+                    }
+                    long tmp=a-b;
+                    return (int)tmp;
+                }
+            }
+        });
+        fileName= "stock" + DateTimeUtil.getDateString() + "After%Before.csv";
+        writeFile(rootpath+fileName,resultList);
+
+
+
+
 
 
     }
 
-    static void one(  String symbol) throws ParseException {
+    static void writeFile(String path, List list) {
+
+        try {
+            FileWriter fw = new FileWriter(path);
+            for (Object obj : list) {
+                fw.write(obj.toString());
+                fw.write("\n");
+            }
+            fw.flush();
+            fw.close();
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    static StockStatistic one(String symbol) throws ParseException {
 //        String symbol = "SZ300277";
         String result = forchart(symbol);
         Gson gson = new Gson();
@@ -46,41 +118,48 @@ public class StockDemo {
         //"time": "Fri Apr 13 09:30:00 +0800 2018"
         SimpleDateFormat sdf1 = new SimpleDateFormat("EEE MMM dd HH:mm:ss Z yyyy", Locale.UK);
 
-        String tmpTime=stockChart.getChartlist().get(0).getTime();
+        String tmpTime = stockChart.getChartlist().get(0).getTime();
         Date tmpTimeDate = sdf1.parse(tmpTime);
-        String dayStr=DateTimeUtil.toDateTimeString(tmpTimeDate,"yyyy-MM-dd");
+        String dayStr = DateTimeUtil.toDateTimeString(tmpTimeDate, "yyyy-MM-dd");
 
-        long beforeTime=DateTimeUtil.toDate(dayStr,"14:30:00").getTime();
+        long beforeTime = DateTimeUtil.toDate(dayStr, "14:30:00").getTime();
 
-        long volumeBeforeCount=0;
-        long volumeBeforeSum=0;
-        long valumeBeforeAvg=0;
+        long volumeBeforeCount = 0;
+        long volumeBeforeSum = 0;
+        long valumeBeforeAvg = 0;
 
-        long volumeAfterCount=0;
-        long volumeAfterSum=0;
-        long valumeAfterAvg=0;
+        long volumeAfterCount = 0;
+        long volumeAfterSum = 0;
+        long valumeAfterAvg = 0;
 
-        for(StockDetail stockDeail:stockChart.getChartlist()){
-            String time=stockDeail.getTime();
+        for (StockDetail stockDeail : stockChart.getChartlist()) {
+            String time = stockDeail.getTime();
             long longTime = sdf1.parse(time).getTime();
-            if(longTime>beforeTime){
+            if (longTime > beforeTime) {
                 volumeAfterSum += Long.parseLong(stockDeail.getVolume());
                 volumeAfterCount++;
-            }else{
+            } else {
                 volumeBeforeSum += Long.parseLong(stockDeail.getVolume());
                 volumeBeforeCount++;
             }
         }
-        valumeAfterAvg=volumeAfterSum /volumeAfterCount;
-        valumeBeforeAvg=volumeBeforeSum / volumeBeforeCount;
+        if (volumeAfterCount == 0) {
+            valumeAfterAvg = 0;
+        } else {
+            valumeAfterAvg = volumeAfterSum / volumeAfterCount;
+        }
 
-        logger.info("symbol="+symbol+",valumeAfterAvg="+valumeAfterAvg+",valumeBeforeAvg="+valumeBeforeAvg);
+        if (volumeAfterCount == 0) {
+            valumeBeforeAvg=0;
+        } else {
+            valumeBeforeAvg = volumeBeforeSum / volumeBeforeCount;
+        }
 
+        logger.info("symbol=" + symbol + ",valumeAfterAvg=" + valumeAfterAvg + ",valumeBeforeAvg=" + valumeBeforeAvg);
+        StockStatistic stockStatistic = new StockStatistic(symbol, valumeAfterAvg, valumeBeforeAvg);
 
-
+        return stockStatistic;
     }
-
-
 
 
     static String forchart(String symbol) {
@@ -88,8 +167,7 @@ public class StockDemo {
 
         HashMap<String, Object> requestParams = new HashMap<String, Object>();
 
-        String cookieStr = "aliyungf_tc=AQAAAGk5v3UF1QIA2k1tO17MU0HU412U; xq_a_token=229a3a53d49b5d0078125899e528279b0e54b5fe; xq_a_token.sig=oI-FfEMvVYbAuj7Ho7Z9mPjGjjI; " +
-                "xq_r_token=8a43eb9046efe1c0a8437476082dc9aac6db2626; xq_r_token.sig=Efl_JMfn071_BmxcpNvmjMmUP40; u=921523110010183; __utma=1.850499265.1523110010.1523110010.1523110010.1; __utmc=1; __utmz=1.1523110010.1.1.utmcsr=(direct)|utmccn=(direct)|utmcmd=(none); Hm_lvt_1db88642e346389874251b5a1eded6e3=1523110010; device_id=7fa6cb6cded3733e30b25de4c30df4b0; s=fk11dgpvo7; __utmb=1.24.10.1523110010; Hm_lpvt_1db88642e346389874251b5a1eded6e3=1523111048";
+        String cookieStr = "aliyungf_tc=AQAAAKza0Hs1nw0AG9oCaknNVBkVA2kd; xq_a_token=0d524219cf0dd2d0a4d48f15e36f37ef9ebcbee1; xq_a_token.sig=P0rdE1K6FJmvC2XfH5vucrIHsnw; xq_r_token=7095ce0c820e0a53c304a6ead234a6c6eca38488; xq_r_token.sig=xBQzKLc4EP4eZvezKxqxXNtB7K0; __utma=1.1606630902.1524461634.1524461634.1524461634.1; __utmc=1; __utmz=1.1524461634.1.1.utmcsr=baidu|utmccn=(organic)|utmcmd=organic; __utmt=1; u=901524461634301; device_id=d2ae2cf089446cb0db21b2f013444290; s=ed15km0t3j; __utmb=1.2.10.1524461634";
 
         Map<String, Object> headerMap = new HashMap<String, Object>();
         headerMap.put("Cookie", cookieStr);
@@ -101,7 +179,7 @@ public class StockDemo {
         headerMap.put("Connection", "keep-alive");
 
         String result = HttpUtil.httpGet(url, requestParams, headerMap, "UTF-8");
-        logger.info("result=\n" + result);
+//        logger.info("result=\n" + result);
 
         return result;
 
@@ -272,3 +350,48 @@ class StockDetail {
         this.time = time;
     }
 }
+
+
+class StockStatistic {
+
+    //    logger.info("symbol=" + symbol + ",valumeAfterAvg=" + valumeAfterAvg + ",valumeBeforeAvg=" + valumeBeforeAvg);
+    private String symbol;
+    private long valumeAfterAvg;
+    private long valumeBeforeAvg;
+
+    public StockStatistic(String symbol, long valumeAfterAvg, long valumeBeforeAvg) {
+        this.symbol = symbol;
+        this.valumeAfterAvg = valumeAfterAvg;
+        this.valumeBeforeAvg = valumeBeforeAvg;
+    }
+
+    public String getSymbol() {
+        return symbol;
+    }
+
+    public void setSymbol(String symbol) {
+        this.symbol = symbol;
+    }
+
+    public long getValumeAfterAvg() {
+        return valumeAfterAvg;
+    }
+
+    public void setValumeAfterAvg(long valumeAfterAvg) {
+        this.valumeAfterAvg = valumeAfterAvg;
+    }
+
+    public long getValumeBeforeAvg() {
+        return valumeBeforeAvg;
+    }
+
+    public void setValumeBeforeAvg(long valumeBeforeAvg) {
+        this.valumeBeforeAvg = valumeBeforeAvg;
+    }
+
+    @Override
+    public String toString() {
+        return  symbol + "," + valumeAfterAvg + ", " + valumeBeforeAvg ;
+    }
+}
+

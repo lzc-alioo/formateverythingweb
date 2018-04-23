@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.util.ArrayList;
@@ -60,7 +61,7 @@ public class XueqiuDeployServiceImpl implements DeployService {
 
     public List<Stock> getPageData(int page) {
 
-        String url = "https://xueqiu.com/stock/cata/stocklist.json?page="+page+"&size=90&order=desc&orderby=percent&type=11%2C12&_=1523111500651";
+        String url = "https://xueqiu.com/stock/cata/stocklist.json?page=" + page + "&size=90&order=desc&orderby=percent&type=11%2C12&_=1524461649806";
 
         HashMap<String, Object> requestParams = new HashMap<String, Object>();
 //        page: 1
@@ -76,8 +77,7 @@ public class XueqiuDeployServiceImpl implements DeployService {
 //        requestParams.put("type", "11,12");
 //        requestParams.put("_", "1523111500651");
 
-        cookieStr = "aliyungf_tc=AQAAAGk5v3UF1QIA2k1tO17MU0HU412U; xq_a_token=229a3a53d49b5d0078125899e528279b0e54b5fe; xq_a_token.sig=oI-FfEMvVYbAuj7Ho7Z9mPjGjjI; " +
-                "xq_r_token=8a43eb9046efe1c0a8437476082dc9aac6db2626; xq_r_token.sig=Efl_JMfn071_BmxcpNvmjMmUP40; u=921523110010183; __utma=1.850499265.1523110010.1523110010.1523110010.1; __utmc=1; __utmz=1.1523110010.1.1.utmcsr=(direct)|utmccn=(direct)|utmcmd=(none); Hm_lvt_1db88642e346389874251b5a1eded6e3=1523110010; device_id=7fa6cb6cded3733e30b25de4c30df4b0; s=fk11dgpvo7; __utmb=1.24.10.1523110010; Hm_lpvt_1db88642e346389874251b5a1eded6e3=1523111048";
+        cookieStr = "aliyungf_tc=AQAAAKza0Hs1nw0AG9oCaknNVBkVA2kd; xq_a_token=0d524219cf0dd2d0a4d48f15e36f37ef9ebcbee1; xq_a_token.sig=P0rdE1K6FJmvC2XfH5vucrIHsnw; xq_r_token=7095ce0c820e0a53c304a6ead234a6c6eca38488; xq_r_token.sig=xBQzKLc4EP4eZvezKxqxXNtB7K0; __utma=1.1606630902.1524461634.1524461634.1524461634.1; __utmc=1; __utmz=1.1524461634.1.1.utmcsr=baidu|utmccn=(organic)|utmcmd=organic; __utmt=1; u=901524461634301; device_id=d2ae2cf089446cb0db21b2f013444290; s=ed15km0t3j; __utmb=1.2.10.1524461634";
 
         Map<String, Object> headerMap = new HashMap<String, Object>();
         headerMap.put("Cookie", cookieStr);
@@ -109,9 +109,9 @@ public class XueqiuDeployServiceImpl implements DeployService {
 
     static void writeFile(String path, List<String> list) {
 
+        new File(path).deleteOnExit();
+
         try {
-
-
             FileWriter fw = new FileWriter(path);
             for (String str : list) {
                 fw.write(str);
@@ -130,7 +130,7 @@ public class XueqiuDeployServiceImpl implements DeployService {
 
         try {
             FileWriter fw = new FileWriter(path);
-            fw.write(new String(new byte[]{(byte) 0xEF, (byte) 0xBB, (byte) 0xBF}));
+//            fw.write(new String(new byte[]{(byte) 0xEF, (byte) 0xBB, (byte) 0xBF}));
 
             for (String str : list) {
                 fw.write(str);
