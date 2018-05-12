@@ -182,7 +182,7 @@ public class HttpUtil {
             tmpUrl = builder.toString();
             httpGet = new HttpGet(tmpUrl);
 
-            logger.debug("executing request " + httpGet.getURI());
+//            logger.debug("executing request " + httpGet.getURI());
             //if (cookieStr != null) {
             //    httpGet.setHeader("Cookie", cookieStr);
             //}

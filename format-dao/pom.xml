@@ -49,6 +49,10 @@
             <artifactId>spring-context</artifactId>
             <version>3.2.4.RELEASE</version>
         </dependency>
+        <dependency>
+            <groupId>org.mybatis</groupId>
+            <artifactId>mybatis</artifactId>
+        </dependency>
     </dependencies>
 
 </project>

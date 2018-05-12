@@ -3,10 +3,12 @@ package com.lzc.home.article.stock;
 import com.google.gson.Gson;
 import com.lzc.home.article.launcher.DateTimeUtil;
 import com.lzc.home.article.launcher.HttpUtil;
+import com.lzc.home.article.mail.MailUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.text.ParseException;
@@ -16,20 +18,28 @@ import java.util.*;
 public class StockDemo {
     private static final Logger logger = LoggerFactory.getLogger(StockDemo.class);
 
-    static String fileName = "stock" + DateTimeUtil.getDateString() + ".csv";
 
     public static void main(String[] args) throws ParseException {
 
         String rootpath = "/export/Logs/f.alioo.online/";
+
+        //String fileName = "stock" + DateTimeUtil.getDateString() + ".csv";
+        //纠正文件名
+        String fileName = getRightFileName(rootpath);
 
         List<String> stockList = readFile(rootpath + fileName);
         String filterStr = "0028";
 
 //        List<String> newList = filter(stockList, filterStr);
 
+        long a=System.currentTimeMillis();
+
         List<StockStatistic> resultList = new ArrayList<StockStatistic>();
         for (int i = 0; i < stockList.size(); i++) {
+            //SZ300116,300116,坚瑞沃能,4.03,10.11,0.37,4.03,3.65,12.64,3.59,9.80307399292E9,5.030432611E8,11,,127262694,false
             String stockString = stockList.get(i);
+
+            //SZ300116
             String stockStr = stockString.split(",")[0];
             if (stockStr != null && stockStr.length() > 8) {
                 stockStr = stockStr.substring(stockStr.length() - 8);
@@ -38,57 +48,93 @@ public class StockDemo {
             StockStatistic stockStatistic = one(stockStr);
             resultList.add(stockStatistic);
         }
+        long b=System.currentTimeMillis();
+
 
         Collections.sort(resultList, new Comparator<StockStatistic>() {
             @Override
             public int compare(StockStatistic o1, StockStatistic o2) {
-                if(o1==null&&o2==null){
+                if (o1 == null && o2 == null) {
                     return 0;
-                }else if(o1==null&&o2!=null){
+                } else if (o1 == null && o2 != null) {
                     return -1;
-                }else if(o1!=null&&o2==null){
+                } else if (o1 != null && o2 == null) {
                     return 1;
-                }else  {
-                    long tmp=o1.getValumeAfterAvg()-o2.getValumeAfterAvg();
-                    return (int)tmp;
+                } else {
+                    long tmp = o1.getValumeAfterAvg() - o2.getValumeAfterAvg();
+                    return (int) tmp;
                 }
             }
         });
-        fileName= "stock" + DateTimeUtil.getDateString() + "After.csv";
-        writeFile(rootpath+fileName,resultList);
+
+        //stock2018-05-13After.csv
+        fileName = fileName.substring(0, fileName.length() - 4) + "After.csv";
+        writeFile(rootpath + fileName, resultList);
 
         //
         Collections.sort(resultList, new Comparator<StockStatistic>() {
             @Override
             public int compare(StockStatistic o1, StockStatistic o2) {
-                if(o1==null&&o2==null){
+                if (o1 == null && o2 == null) {
                     return 0;
-                }else if(o1==null&&o2!=null){
+                } else if (o1 == null && o2 != null) {
                     return -1;
-                }else if(o1!=null&&o2==null){
-                    return 1;
-                }else  {
-                    long a=0;
-                    long b=0;
-                    if(o1.getValumeBeforeAvg()!=0){
-                        a=o1.getValumeAfterAvg()/o1.getValumeBeforeAvg();
+                } else if (o1 != null && o2 == null) {
+                    return -1;
+                } else {
+                    long a = 0;
+                    long b = 0;
+                    if (o1.getValumeBeforeAvg() != 0) {
+                        a = o1.getValumeAfterAvg() / o1.getValumeBeforeAvg();
                     }
-                    if(o2.getValumeBeforeAvg()!=0){
-                        b=o2.getValumeAfterAvg()/o2.getValumeBeforeAvg();
+                    if (o2.getValumeBeforeAvg() != 0) {
+                        b = o2.getValumeAfterAvg() / o2.getValumeBeforeAvg();
                     }
-                    long tmp=a-b;
-                    return (int)tmp;
+                    long tmp = b - a;
+                    return (int) tmp;
                 }
             }
         });
-        fileName= "stock" + DateTimeUtil.getDateString() + "After%Before.csv";
-        writeFile(rootpath+fileName,resultList);
+
+        fileName = fileName.substring(0, fileName.length() - 4) + "-Before.csv";
+        writeFile(rootpath + fileName, resultList);
 
 
+        //增加发邮件的功能
+        sendMail(rootpath, fileName,(b-a));
+    }
+
+    private static void sendMail(String rootpath, String fileName,long useTime) {
+        List<String> stockList = readFile(rootpath + fileName);
+        String[] to = new String[]{"lzc.java@icloud.com", "lzc-alioo@163.com"};
+        String subject = "股票信息#" + fileName+"#耗时"+useTime+"ms";
+        String html = "<html><head></head><body>";
+
+        for (int i = 0; i < 100; i++) {
+            html = html + "<div>" + stockList.get(i) + "</div>";
+        }
+        html = html + "</body></html>";
+
+        MailUtil.inlineFileMail(to, subject, html, null);
+    }
 
 
+    static String getRightFileName(String rootpath) {
+        String fileName = "";
+        int tmp = 0;
+        while (tmp < 30) {
+//            yyyy-MM-dd
+            fileName = "stock" + DateTimeUtil.getNextDateString(-tmp) + ".csv";
+            File tmpFile = new File(rootpath + fileName);
+            if (tmpFile.exists()) {
+                break;
+            }
+
+            tmp++;
+        }
 
 
+        return fileName;
     }
 
     static void writeFile(String path, List list) {
@@ -150,7 +196,7 @@ public class StockDemo {
         }
 
         if (volumeAfterCount == 0) {
-            valumeBeforeAvg=0;
+            valumeBeforeAvg = 0;
         } else {
             valumeBeforeAvg = volumeBeforeSum / volumeBeforeCount;
         }
@@ -391,7 +437,7 @@ class StockStatistic {
 
     @Override
     public String toString() {
-        return  symbol + "," + valumeAfterAvg + ", " + valumeBeforeAvg ;
+        return symbol + "," + valumeAfterAvg + ", " + valumeBeforeAvg;
     }
 }
 

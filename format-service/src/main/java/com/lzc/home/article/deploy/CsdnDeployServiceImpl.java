@@ -19,20 +19,20 @@ import java.util.List;
 public class CsdnDeployServiceImpl implements DeployService {
     private static final Logger logger = LoggerFactory.getLogger(CsdnDeployServiceImpl.class);
 
-    @Resource
-    private ArticleDao articleDao;
+//    @Resource
+//    private ArticleDao articleDao;
 
     @Value(value = "${cookieStr}")
     private String cookieStr;
 
     public void deploy() {
-
-        List<Article> list = DeployUtil.postlist(null);
-        for (int i=0;i<list.size();i++) {
-            Article e=list.get(i);
-            logger.info("["+i+"]准备插入e"+ e);
-            articleDao.insert(e);
-        }
+//
+//        List<Article> list = DeployUtil.postlist(null);
+//        for (int i=0;i<list.size();i++) {
+//            Article e=list.get(i);
+//            logger.info("["+i+"]准备插入e"+ e);
+//            articleDao.insert(e);
+//        }
 
         //Article e = new Article();
         //e.setCsdnLink("http://blog.csdn.net/hl_java/article/details/78344667");

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="
+           http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+           http://www.springframework.org/schema/context
+           http://www.springframework.org/schema/context/spring-context-3.1.xsd
+           http://www.springframework.org/schema/aop
+           http://www.springframework.org/schema/aop/spring-aop-3.1.xsd"
+       default-autowire="byName">
+
+    <!-- 邮件服务 -->
+    <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+        <property name="host" value="smtp.qq.com"/>
+        <property name="port" value="587"/>
+        <property name="protocol" value="smtp"/>
+        <property name="username" value="lzc.java@icloud.com"/>
+        <property name="password" value="lzc121028"/>
+        <property name="defaultEncoding" value="UTF-8"/>
+        <property name="javaMailProperties">
+            <props>
+                <prop key="mail.smtp.auth">true</prop>
+                <prop key="mail.smtp.timeout">25000</prop>
+            </props>
+        </property>
+    </bean>
+
+    <!-- this is a template message that we can pre-load with default state -->
+    <bean id="templateMessage" class="org.springframework.mail.SimpleMailMessage">
+        <property name="from" value="785427346@qq.com"/>
+        <property name="subject" value="尝试发邮件"/>
+    </bean>
+
+    <!--<bean id="orderManager" class="cn.cherish.common.SimpleOrderManager">-->
+    <!--<property name="mailSender" ref="mailSender"/>-->
+    <!--<property name="templateMessage" ref="templateMessage"/>-->
+    <!--</bean>-->
+
+</beans>
