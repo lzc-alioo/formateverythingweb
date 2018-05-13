@@ -14,6 +14,8 @@ import java.io.FileWriter;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.concurrent.*;
+
 
 public class StockDemo {
     private static final Logger logger = LoggerFactory.getLogger(StockDemo.class);
@@ -28,27 +30,29 @@ public class StockDemo {
         String fileName = getRightFileName(rootpath);
 
         List<String> stockList = readFile(rootpath + fileName);
-        String filterStr = "0028";
-
+//        String filterStr = "0028";
 //        List<String> newList = filter(stockList, filterStr);
 
-        long a=System.currentTimeMillis();
 
-        List<StockStatistic> resultList = new ArrayList<StockStatistic>();
-        for (int i = 0; i < stockList.size(); i++) {
-            //SZ300116,300116,坚瑞沃能,4.03,10.11,0.37,4.03,3.65,12.64,3.59,9.80307399292E9,5.030432611E8,11,,127262694,false
-            String stockString = stockList.get(i);
+        long a = System.currentTimeMillis();
 
-            //SZ300116
-            String stockStr = stockString.split(",")[0];
-            if (stockStr != null && stockStr.length() > 8) {
-                stockStr = stockStr.substring(stockStr.length() - 8);
-            }
-            logger.info("i=" + i + "stockString=" + stockString);
-            StockStatistic stockStatistic = one(stockStr);
-            resultList.add(stockStatistic);
-        }
-        long b=System.currentTimeMillis();
+        List<StockStatistic> resultList = batch(stockList);
+
+//        List<StockStatistic> resultList = new ArrayList<StockStatistic>();
+//        for (int i = 0; i < stockList.size(); i++) {
+//            //SZ300116,300116,坚瑞沃能,4.03,10.11,0.37,4.03,3.65,12.64,3.59,9.80307399292E9,5.030432611E8,11,,127262694,false
+//            String stockString = stockList.get(i);
+//
+//            //SZ300116
+//            String stockStr = stockString.split(",")[0];
+//            if (stockStr != null && stockStr.length() > 8) {
+//                stockStr = stockStr.substring(stockStr.length() - 8);
+//            }
+//            logger.info("i=" + i + "stockString=" + stockString);
+//            StockStatistic stockStatistic = one(stockStr);
+//            resultList.add(stockStatistic);
+//        }
+        long b = System.currentTimeMillis();
 
 
         Collections.sort(resultList, new Comparator<StockStatistic>() {
@@ -59,10 +63,10 @@ public class StockDemo {
                 } else if (o1 == null && o2 != null) {
                     return -1;
                 } else if (o1 != null && o2 == null) {
-                    return 1;
+                    return -1;
                 } else {
                     long tmp = o1.getValumeAfterAvg() - o2.getValumeAfterAvg();
-                    return (int) tmp;
+                    return -(int) tmp;
                 }
             }
         });
@@ -90,8 +94,8 @@ public class StockDemo {
                     if (o2.getValumeBeforeAvg() != 0) {
                         b = o2.getValumeAfterAvg() / o2.getValumeBeforeAvg();
                     }
-                    long tmp = b - a;
-                    return (int) tmp;
+                    long tmp = a - b;
+                    return -(int) tmp;
                 }
             }
         });
@@ -101,17 +105,90 @@ public class StockDemo {
 
 
         //增加发邮件的功能
-        sendMail(rootpath, fileName,(b-a));
+        sendMail(rootpath, fileName, (b - a));
     }
 
-    private static void sendMail(String rootpath, String fileName,long useTime) {
+
+    private static List<StockStatistic> batch(List<String> stockList) {
+        List<StockStatistic> resultList = new ArrayList<StockStatistic>();
+
+        ThreadPoolExecutor pool = new ThreadPoolExecutor(20, 20, 0, TimeUnit.DAYS, new LinkedBlockingDeque<Runnable>());
+
+        List<Callable<StockStatistic>> callableList = new ArrayList<Callable<StockStatistic>>(stockList.size());
+        for (int i = 0; i < stockList.size(); i++) {
+            //SZ300116,300116,坚瑞沃能,4.03,10.11,0.37,4.03,3.65,12.64,3.59,9.80307399292E9,5.030432611E8,11,,127262694,false
+            String stockString = stockList.get(i);
+
+            //SZ300116
+            String stockStr = stockString.split(",")[0];
+            if (stockStr != null && stockStr.length() > 8) {
+                stockStr = stockStr.substring(stockStr.length() - 8);
+            }
+            logger.info("i=" + i + "stockString=" + stockString);
+
+
+            final String finalStockStr = stockStr;
+            final int finalI = i;
+            Callable<StockStatistic> callable = new Callable() {
+                @Override
+                public Object call() throws Exception {
+                    StockStatistic stockStatistic = null;
+                    try {
+                        stockStatistic = one(finalI,finalStockStr);
+                    } catch (ParseException e) {
+                        logger.error("出现异常了(i" + finalI + ")", e);
+                    }
+
+                    return stockStatistic;
+                }
+            };
+            callableList.add(callable);
+        }
+
+        List<Future<StockStatistic>> futureList = null;
+        try {
+            futureList = pool.invokeAll(callableList);
+
+            for (int j = 0; j < futureList.size(); j++) {
+                try {
+                    StockStatistic obj = futureList.get(j).get();
+                    if (obj != null) {
+                        resultList.add(obj);
+                    }
+
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                }
+            }
+
+
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+
+        pool.shutdown();
+
+//            StockStatistic stockStatistic = null;
+//            try {
+//                stockStatistic = one(stockStr);
+//            } catch (ParseException e) {
+//               logger.error("出现异常了(i"+i+")",e);
+//            }
+//            resultList.add(stockStatistic);
+
+        return resultList;
+    }
+
+    private static void sendMail(String rootpath, String fileName, long useTime) {
         List<String> stockList = readFile(rootpath + fileName);
-        String[] to = new String[]{"lzc.java@icloud.com", "lzc-alioo@163.com"};
-        String subject = "股票信息#" + fileName+"#耗时"+useTime+"ms";
+        String[] to = new String[]{"lzc.java@icloud.com", "lzc_alioo@163.com"};
+        String subject = "股票信息#" + fileName + "#耗时" + useTime + "ms";
         String html = "<html><head></head><body>";
 
-        for (int i = 0; i < 100; i++) {
-            html = html + "<div>" + stockList.get(i) + "</div>";
+        int len = stockList.size() > 100 ? 100 : stockList.size();
+        for (int i = 0; i < len; i++) {
+            html = html + "<div>["+i+"]" + stockList.get(i) + "</div>";
         }
         html = html + "</body></html>";
 
@@ -155,9 +232,13 @@ public class StockDemo {
     }
 
 
-    static StockStatistic one(String symbol) throws ParseException {
+    static StockStatistic one(int i,String symbol) throws ParseException {
 //        String symbol = "SZ300277";
         String result = forchart(symbol);
+        if(result==null){
+            return null;
+        }
+
         Gson gson = new Gson();
         StockChart stockChart = gson.fromJson(result, StockChart.class);
 //        "EEE, d MMM yyyy HH:mm:ss Z"	Wed, 4 Jul 2001 12:08:56 -0700
@@ -201,7 +282,7 @@ public class StockDemo {
             valumeBeforeAvg = volumeBeforeSum / volumeBeforeCount;
         }
 
-        logger.info("symbol=" + symbol + ",valumeAfterAvg=" + valumeAfterAvg + ",valumeBeforeAvg=" + valumeBeforeAvg);
+        logger.info("["+i+"]symbol=" + symbol + ",valumeAfterAvg=" + valumeAfterAvg + ",valumeBeforeAvg=" + valumeBeforeAvg);
         StockStatistic stockStatistic = new StockStatistic(symbol, valumeAfterAvg, valumeBeforeAvg);
 
         return stockStatistic;
@@ -232,43 +313,6 @@ public class StockDemo {
     }
 
 
-    static List<String> filter(List<String> stockList, String filterStr) {
-        List<String> newList = new ArrayList<String>();
-
-        for (int i = 0; i < stockList.size(); i++) {
-
-            String stockString = stockList.get(i);
-            String stockStr = stockString.split(",")[0];
-
-            boolean flag = check(stockStr, filterStr);
-            if (flag) {
-                newList.add(stockString);
-            }
-
-        }
-        return newList;
-    }
-
-    /**
-     * 完全匹配则返回true,否则false
-     *
-     * @param stockstr
-     * @param filterStr
-     * @return
-     */
-    static boolean check(String stockstr, String filterStr) {
-
-
-        for (char filterChar : filterStr.toCharArray()) {
-
-            if (!stockstr.contains("" + filterChar)) {
-                return false;
-            }
-        }
-
-        return true;
-
-    }
 
 
     static List<String> readFile(String path) {
@@ -437,7 +481,7 @@ class StockStatistic {
 
     @Override
     public String toString() {
-        return symbol + "," + valumeAfterAvg + ", " + valumeBeforeAvg;
+        return symbol + ", " + valumeAfterAvg + ", " + valumeBeforeAvg;
     }
 }
 

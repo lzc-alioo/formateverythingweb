@@ -101,7 +101,7 @@
         </AsyncLogger>
         <!-- jd or commons loggers end -->
         <!-- project loggers begin -->
-        <AsyncLogger name="com.lzc.format" level="DEBUG" includeLocation="true" additivity="true">
+        <AsyncLogger name="com.lzc.home" level="DEBUG" includeLocation="true" additivity="true">
             <AppenderRef ref="proj-output"/>
         </AsyncLogger>
         <!-- project loggers end -->

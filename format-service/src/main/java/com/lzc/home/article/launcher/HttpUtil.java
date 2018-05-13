@@ -163,6 +163,7 @@ public class HttpUtil {
 
 
 
+
         HttpGet httpGet = null;
         String result = null;
         try {
@@ -189,6 +190,10 @@ public class HttpUtil {
             for (Map.Entry<String, Object> entry : headerMap.entrySet()) {
                 httpGet.setHeader(entry.getKey(), (String) entry.getValue());
             }
+
+
+            RequestConfig requestConfig = RequestConfig.custom().setSocketTimeout(2000).setConnectTimeout(2000).build();//设置请求和传输超时时间
+            httpGet.setConfig(requestConfig);
 
 
             HttpResponse response = client.execute(httpGet);
