@@ -139,7 +139,7 @@ public class StockDemo {
     private static List<StockStatistic> batch(List<String> stockList) {
         List<StockStatistic> resultList = new ArrayList<StockStatistic>();
 
-        ThreadPoolExecutor pool = new ThreadPoolExecutor(1, 20, 0, TimeUnit.DAYS, new
+        ThreadPoolExecutor pool = new ThreadPoolExecutor(20, 20, 0, TimeUnit.DAYS, new
                 LinkedBlockingDeque<Runnable>());
 
         List<Callable<StockStatistic>> callableList = new ArrayList<Callable<StockStatistic>>(stockList.size());
