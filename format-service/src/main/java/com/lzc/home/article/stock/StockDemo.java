@@ -1,16 +1,23 @@
 package com.lzc.home.article.stock;
 
 import com.google.gson.Gson;
+import com.jd.o2o.commons.utils.spring.SpringContextHolder;
+import com.lzc.home.article.PropertyPlaceholder;
 import com.lzc.home.article.launcher.DateTimeUtil;
 import com.lzc.home.article.launcher.HttpUtil;
+import com.lzc.home.article.launcher.ServiceLauncher;
 import com.lzc.home.article.mail.MailUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.net.SocketException;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -19,39 +26,40 @@ import java.util.concurrent.*;
 
 public class StockDemo {
     private static final Logger logger = LoggerFactory.getLogger(StockDemo.class);
+    private static final String bootPath = StockDemo.class.getName();
 
+
+    private static String cookieStr = "device_id=6bebda03f1df19b52b9584413a5a1924; __utmz=1.1526146152.1.1.utmcsr=(direct)" +
+            "|utmccn=(direct)|utmcmd=(none); _ga=GA1.2.301831906.1526146152; s=fo11sg4sxv; aliyungf_tc=AQAAAJzYnyjAjg4AgvIN0hs7aTN4ydF3; xq_a_token=019174f18bf425d22c8e965e48243d9fcfbd2cc0; xq_a_token.sig=_pB0kKy3fV9fvtvkOzxduQTrp7E; xq_r_token=2d465aa5d312fbe8d88b4e7de81e1e915de7989a; xq_r_token.sig=lOCElS5ycgbih9P-Ny3cohQ-FSA; u=701529498187452; __utmc=1; Hm_lvt_1db88642e346389874251b5a1eded6e3=1528439693,1529498187; _gid=GA1.2.1073051851.1529649167; _gat_gtag_UA_16079156_4=1; Hm_lpvt_1db88642e346389874251b5a1eded6e3=1529649184; __utma=1.301831906.1526146152.1529545676.1529649185.6; __utmt=1; __utmb=1.1.10.1529649185";
 
     public static void main(String[] args) throws ParseException {
 
-        String rootpath = "/export/Logs/f.alioo.online/";
+        //重新从配置文件中获取cookieStr
+        try{
+            new ClassPathXmlApplicationContext(new String[] { "spring-config.xml" });
+            logger.info("{}服务已启动", new Object[]{ bootPath });
 
-        //String fileName = "stock" + DateTimeUtil.getDateString() + ".csv";
+        }catch(Throwable ex){
+            logger.error("服务已启动异常:{}", new Object[]{ ex.getLocalizedMessage(), ex });
+        }
+        cookieStr= PropertyPlaceholder.getProperty("cookieStr");
+
+
+        String rootpath = "/export/Logs/f.ailioo.online/";
+
         //纠正文件名
         String fileName = getRightFileName(rootpath);
 
         List<String> stockList = readFile(rootpath + fileName);
-//        String filterStr = "0028";
-//        List<String> newList = filter(stockList, filterStr);
+
+        //过滤 SH6开头 或者  SZ0开头 的股票
+        stockList = filter(stockList);
 
 
         long a = System.currentTimeMillis();
 
         List<StockStatistic> resultList = batch(stockList);
 
-//        List<StockStatistic> resultList = new ArrayList<StockStatistic>();
-//        for (int i = 0; i < stockList.size(); i++) {
-//            //SZ300116,300116,坚瑞沃能,4.03,10.11,0.37,4.03,3.65,12.64,3.59,9.80307399292E9,5.030432611E8,11,,127262694,false
-//            String stockString = stockList.get(i);
-//
-//            //SZ300116
-//            String stockStr = stockString.split(",")[0];
-//            if (stockStr != null && stockStr.length() > 8) {
-//                stockStr = stockStr.substring(stockStr.length() - 8);
-//            }
-//            logger.info("i=" + i + "stockString=" + stockString);
-//            StockStatistic stockStatistic = one(stockStr);
-//            resultList.add(stockStatistic);
-//        }
         long b = System.currentTimeMillis();
 
 
@@ -108,11 +116,31 @@ public class StockDemo {
         sendMail(rootpath, fileName, (b - a));
     }
 
+    /**
+     * 过滤 SH6开头 或者  SZ0开头 的股票
+     *
+     * @param stockList
+     * @return
+     */
+    private static List<String> filter(List<String> stockList) {
+        List<String> retList = new ArrayList<String>();
+
+        for (String str : stockList) {
+            if (str.startsWith("SH6") || str.startsWith("SZ0")) {
+                retList.add(str);
+            }
+        }
+
+        return retList;
+
+    }
+
 
     private static List<StockStatistic> batch(List<String> stockList) {
         List<StockStatistic> resultList = new ArrayList<StockStatistic>();
 
-        ThreadPoolExecutor pool = new ThreadPoolExecutor(1, 20, 0, TimeUnit.DAYS, new LinkedBlockingDeque<Runnable>());
+        ThreadPoolExecutor pool = new ThreadPoolExecutor(1, 20, 0, TimeUnit.DAYS, new
+                LinkedBlockingDeque<Runnable>());
 
         List<Callable<StockStatistic>> callableList = new ArrayList<Callable<StockStatistic>>(stockList.size());
         for (int i = 0; i < stockList.size(); i++) {
@@ -133,10 +161,26 @@ public class StockDemo {
                 @Override
                 public Object call() throws Exception {
                     StockStatistic stockStatistic = null;
-                    try {
-                        stockStatistic = one(finalI,finalStockStr);
-                    } catch (ParseException e) {
-                        logger.error("出现异常了(i" + finalI + ")", e);
+
+                    for (int j = 0; j < 5; j++) {
+                        try {
+                            stockStatistic = one(finalI, finalStockStr);
+                            if (stockStatistic != null) {
+                                break;
+                            }
+                            long sleepTime = 1000L + new Random().nextInt(500);
+
+                        } catch (Exception e) {
+
+                            if (e instanceof SocketException) {
+                                long sleepTime = 2000L + new Random().nextInt(2000);
+                                Thread.sleep(sleepTime);
+
+                            } else {
+                                logger.error("出现异常了(i" + finalI + ")", e);
+                            }
+                        }
+
                     }
 
                     return stockStatistic;
@@ -188,7 +232,7 @@ public class StockDemo {
 
         int len = stockList.size() > 100 ? 100 : stockList.size();
         for (int i = 0; i < len; i++) {
-            html = html + "<div>["+i+"]" + stockList.get(i) + "</div>";
+            html = html + "<div>[" + i + "]" + stockList.get(i) + "</div>";
         }
         html = html + "</body></html>";
 
@@ -232,10 +276,10 @@ public class StockDemo {
     }
 
 
-    static StockStatistic one(int i,String symbol) throws ParseException {
+    static StockStatistic one(int i, String symbol) throws Exception {
 //        String symbol = "SZ300277";
         String result = forchart(symbol);
-        if(result==null){
+        if (result == null) {
             return null;
         }
 
@@ -276,25 +320,25 @@ public class StockDemo {
             valumeAfterAvg = volumeAfterSum / volumeAfterCount;
         }
 
-        if (volumeAfterCount == 0) {
+        if (volumeBeforeCount == 0) {
             valumeBeforeAvg = 0;
         } else {
             valumeBeforeAvg = volumeBeforeSum / volumeBeforeCount;
         }
 
-        logger.info("["+i+"]symbol=" + symbol + ",valumeAfterAvg=" + valumeAfterAvg + ",valumeBeforeAvg=" + valumeBeforeAvg);
+        logger.info("[" + i + "]symbol=" + symbol + ",valumeAfterAvg=" + valumeAfterAvg + ",valumeBeforeAvg=" + valumeBeforeAvg);
         StockStatistic stockStatistic = new StockStatistic(symbol, valumeAfterAvg, valumeBeforeAvg);
 
         return stockStatistic;
     }
 
 
-    static String forchart(String symbol) {
+    static String forchart(String symbol) throws Exception {
         String url = "https://xueqiu.com/stock/forchart/stocklist.json?symbol=" + symbol + "&period=1d&one_min=1";
 
         HashMap<String, Object> requestParams = new HashMap<String, Object>();
 
-        String cookieStr = "aliyungf_tc=AQAAAKza0Hs1nw0AG9oCaknNVBkVA2kd; xq_a_token=0d524219cf0dd2d0a4d48f15e36f37ef9ebcbee1; xq_a_token.sig=P0rdE1K6FJmvC2XfH5vucrIHsnw; xq_r_token=7095ce0c820e0a53c304a6ead234a6c6eca38488; xq_r_token.sig=xBQzKLc4EP4eZvezKxqxXNtB7K0; __utma=1.1606630902.1524461634.1524461634.1524461634.1; __utmc=1; __utmz=1.1524461634.1.1.utmcsr=baidu|utmccn=(organic)|utmcmd=organic; __utmt=1; u=901524461634301; device_id=d2ae2cf089446cb0db21b2f013444290; s=ed15km0t3j; __utmb=1.2.10.1524461634";
+//        String cookieStr = "device_id=6bebda03f1df19b52b9584413a5a1924; __utmz=1.1526146152.1.1.utmcsr=(direct)|utmccn=(direct)|utmcmd=(none); _ga=GA1.2.301831906.1526146152; s=fo11sg4sxv; aliyungf_tc=AQAAAJzYnyjAjg4AgvIN0hs7aTN4ydF3; xq_a_token=019174f18bf425d22c8e965e48243d9fcfbd2cc0; xq_a_token.sig=_pB0kKy3fV9fvtvkOzxduQTrp7E; xq_r_token=2d465aa5d312fbe8d88b4e7de81e1e915de7989a; xq_r_token.sig=lOCElS5ycgbih9P-Ny3cohQ-FSA; _gid=GA1.2.601592551.1529498187; _gat_gtag_UA_16079156_4=1; u=701529498187452; Hm_lvt_1db88642e346389874251b5a1eded6e3=1527056942,1528439693,1529498187; __utma=1.301831906.1526146152.1528439701.1529498191.4; __utmc=1; __utmt=1; Hm_lpvt_1db88642e346389874251b5a1eded6e3=1529498203; __utmb=1.2.10.1529498191";
 
         Map<String, Object> headerMap = new HashMap<String, Object>();
         headerMap.put("Cookie", cookieStr);
@@ -311,8 +355,6 @@ public class StockDemo {
         return result;
 
     }
-
-
 
 
     static List<String> readFile(String path) {
@@ -444,6 +486,8 @@ class StockDetail {
 
 class StockStatistic {
 
+    DecimalFormat df = new DecimalFormat("######0.00");
+
     //    logger.info("symbol=" + symbol + ",valumeAfterAvg=" + valumeAfterAvg + ",valumeBeforeAvg=" + valumeBeforeAvg);
     private String symbol;
     private long valumeAfterAvg;
@@ -481,7 +525,12 @@ class StockStatistic {
 
     @Override
     public String toString() {
-        return symbol + ", " + valumeAfterAvg + ", " + valumeBeforeAvg;
+        double b = -1;
+        if (valumeBeforeAvg != 0) {
+            b = valumeAfterAvg * 1.0 / valumeBeforeAvg;
+        }
+
+        return symbol + ", " + valumeAfterAvg + ", " + valumeBeforeAvg + "," + df.format(b);
     }
 }
 

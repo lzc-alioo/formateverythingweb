@@ -88,7 +88,12 @@ public class RouteDeployServiceImpl implements DeployService {
         headerMap.put("Referer","http://192.168.16.1/");
 
 
-        String result = HttpUtil.httpGet(url, requestParams, headerMap, "UTF-8");
+        String result = null;
+        try {
+            result = HttpUtil.httpGet(url, requestParams, headerMap, "UTF-8");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         logger.info("result=\n" + result);
 
 

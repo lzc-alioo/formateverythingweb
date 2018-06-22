@@ -140,7 +140,12 @@ public class DeployUtil {
         headerMap.put("User-Agent", "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36");
         headerMap.put("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8");
 
-        String result = HttpUtil.httpGet(url, requestParams, headerMap,"UTF-8");
+        String result = null;
+        try {
+            result = HttpUtil.httpGet(url, requestParams, headerMap,"UTF-8");
+        } catch (Exception e1) {
+            e1.printStackTrace();
+        }
 
         Document doc = Jsoup.parse(result);
         boolean needReLogin = doc.text().contains("帐号登录");

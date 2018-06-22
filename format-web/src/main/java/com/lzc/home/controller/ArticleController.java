@@ -1,7 +1,6 @@
 package com.lzc.home.controller;
 
 import com.jd.o2o.commons.domain.PageBean;
-import com.jd.o2o.commons.utils.json.JsonUtils;
 import com.lzc.home.domain.entity.Article;
 import com.lzc.home.serivce.ArticleService;
 import org.slf4j.Logger;
@@ -133,7 +132,9 @@ public class ArticleController {
             contentLength=article.getContent().length();
         }
         logger.info("获取单条文章id:{}，返回数据字符数量:{}", new Object[]{id, contentLength});
-        logger.info("获取单条文章id:{}，返回数据:{}", new Object[]{id, JsonUtils.toJson(article)});
+
+
+        logger.info("获取单条文章id:{}，返回数据:{}", new Object[]{id,  article.toString()});
         return resultMap;
     }
 

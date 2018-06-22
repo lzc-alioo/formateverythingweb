@@ -77,7 +77,7 @@ public class XueqiuDeployServiceImpl implements DeployService {
 //        requestParams.put("type", "11,12");
 //        requestParams.put("_", "1523111500651");
 
-        cookieStr = "aliyungf_tc=AQAAAKza0Hs1nw0AG9oCaknNVBkVA2kd; xq_a_token=0d524219cf0dd2d0a4d48f15e36f37ef9ebcbee1; xq_a_token.sig=P0rdE1K6FJmvC2XfH5vucrIHsnw; xq_r_token=7095ce0c820e0a53c304a6ead234a6c6eca38488; xq_r_token.sig=xBQzKLc4EP4eZvezKxqxXNtB7K0; __utma=1.1606630902.1524461634.1524461634.1524461634.1; __utmc=1; __utmz=1.1524461634.1.1.utmcsr=baidu|utmccn=(organic)|utmcmd=organic; __utmt=1; u=901524461634301; device_id=d2ae2cf089446cb0db21b2f013444290; s=ed15km0t3j; __utmb=1.2.10.1524461634";
+        cookieStr = "evice_id=6bebda03f1df19b52b9584413a5a1924; __utmz=1.1526146152.1.1.utmcsr=(direct)|utmccn=(direct)|utmcmd=(none); _ga=GA1.2.301831906.1526146152; s=fo11sg4sxv; aliyungf_tc=AQAAAJzYnyjAjg4AgvIN0hs7aTN4ydF3; xq_a_token=019174f18bf425d22c8e965e48243d9fcfbd2cc0; xq_a_token.sig=_pB0kKy3fV9fvtvkOzxduQTrp7E; xq_r_token=2d465aa5d312fbe8d88b4e7de81e1e915de7989a; xq_r_token.sig=lOCElS5ycgbih9P-Ny3cohQ-FSA; _gid=GA1.2.601592551.1529498187; _gat_gtag_UA_16079156_4=1; u=701529498187452; Hm_lvt_1db88642e346389874251b5a1eded6e3=1527056942,1528439693,1529498187; __utma=1.301831906.1526146152.1528439701.1529498191.4; __utmc=1; __utmt=1; Hm_lpvt_1db88642e346389874251b5a1eded6e3=1529498203; __utmb=1.2.10.1529498191";
 
         Map<String, Object> headerMap = new HashMap<String, Object>();
         headerMap.put("Cookie", cookieStr);
@@ -89,7 +89,12 @@ public class XueqiuDeployServiceImpl implements DeployService {
         headerMap.put("Connection", "keep-alive");
 
 
-        String result = HttpUtil.httpGet(url, requestParams, headerMap, "UTF-8");
+        String result = null;
+        try {
+            result = HttpUtil.httpGet(url, requestParams, headerMap, "UTF-8");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         logger.info("result=\n" + result);
 
         Gson gson = new Gson();

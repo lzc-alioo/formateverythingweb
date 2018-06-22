@@ -11,7 +11,7 @@
            http://www.springframework.org/schema/aop/spring-aop-3.1.xsd"
        default-autowire="byName">
 
-    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+    <bean class="com.lzc.home.article.PropertyPlaceholder">
         <property name="locations">
             <list>
                 <value>classpath:important.properties</value>
@@ -30,7 +30,5 @@
 
     <aop:aspectj-autoproxy proxy-target-class="true"/>
     <context:component-scan base-package="com.lzc"/>
-
-    <import resource="spring-config-datasource-dbcp.xml"/>
 
 </beans>

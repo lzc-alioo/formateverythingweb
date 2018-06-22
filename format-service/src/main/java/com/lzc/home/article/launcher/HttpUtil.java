@@ -124,7 +124,8 @@ public class HttpUtil {
     }
 
 
-    public static String httpGet(String url, Map<String, Object> requestParams, Map<String, Object> headerMap, String urlEncode) {
+    public static String httpGet(String url, Map<String, Object> requestParams, Map<String, Object> headerMap, String
+            urlEncode) throws Exception{
 
 //采用绕过验证的方式处理https请求
         SSLContext sslcontext = null;
@@ -206,10 +207,9 @@ public class HttpUtil {
 
             result = EntityUtils.toString(httpEntity, urlEncode);
 
-        } catch (ClientProtocolException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
+
+        } catch (Exception e) {
+           throw e;
         } finally {
             if (httpGet != null) {
                 httpGet.abort();
