@@ -45,7 +45,7 @@ public class StockDemo {
         cookieStr= PropertyPlaceholder.getProperty("cookieStr");
 
 
-        String rootpath = "/export/Logs/f.ailioo.online/";
+        String rootpath = "/export/Logs/f.alioo.online/";
 
         //纠正文件名
         String fileName = getRightFileName(rootpath);
