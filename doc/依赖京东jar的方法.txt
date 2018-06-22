@@ -3,3 +3,6 @@ mvn install:install-file -Dfile=/Users/didi/work/temp/o2o-commons-utils-1.2-SNAP
 mvn install:install-file -Dfile=/Users/didi/work/temp/o2o-commons-dao-1.1-20151103.084916-20.jar -DgroupId=com.jd.o2o -DartifactId=o2o-commons-dao -Dversion=1.1-SNAPSHOT -Dpackaging=jar
 mvn install:install-file -Dfile=/Users/didi/work/temp/o2o-commons-springmvc-1.1-20151019.025715-1.jar  -DgroupId=com.jd.o2o -DartifactId=o2o-commons-springmvc -Dversion=1.1-SNAPSHOT -Dpackaging=jar
 mvn install:install-file -Dfile=/Users/didi/work/temp/jackson-all-1.9.7.jar  -DgroupId=jackson-all -DartifactId=jackson-all -Dversion=1.9.7 -Dpackaging=jar
+
+
+mvn install:install-file -Dfile=/Users/didi/work/temp/format-util-1.0-SNAPSHOT.jar  -DgroupId=com.alioo -DartifactId=format-util -Dversion=1.0-SNAPSHOT -Dpackaging=jar

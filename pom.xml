@@ -35,7 +35,6 @@
         <!--<ump.jannotation.version>2.1.0</ump.jannotation.version>-->
         <!--<ump.profiler.version>3.2.0</ump.profiler.version>-->
         <!--<jd.jmq.version>1.2.27</jd.jmq.version>-->
-        <!--<deploy-configurer.version>1.2</deploy-configurer.version>-->
         <!--mybatis-->
         <mybatis.version>3.0.5</mybatis.version>
         <mybatis-spring.version>1.0.1</mybatis-spring.version>
