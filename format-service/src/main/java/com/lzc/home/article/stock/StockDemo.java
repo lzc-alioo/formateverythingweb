@@ -1,15 +1,13 @@
 package com.lzc.home.article.stock;
 
 import com.google.gson.Gson;
-import com.jd.o2o.commons.utils.spring.SpringContextHolder;
 import com.lzc.home.article.PropertyPlaceholder;
 import com.lzc.home.article.launcher.DateTimeUtil;
 import com.lzc.home.article.launcher.HttpUtil;
-import com.lzc.home.article.launcher.ServiceLauncher;
 import com.lzc.home.article.mail.MailUtil;
+import com.lzc.home.article.vo.Stock;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import java.io.BufferedReader;
@@ -55,6 +53,10 @@ public class StockDemo {
         //过滤 SH6开头 或者  SZ0开头 的股票
         stockList = filter(stockList);
 
+        //将stockList转成map
+        HashMap stockMap = formap(stockList);
+
+
 
         long a = System.currentTimeMillis();
 
@@ -79,9 +81,9 @@ public class StockDemo {
             }
         });
 
-        //stock2018-05-13After.csv
-        fileName = fileName.substring(0, fileName.length() - 4) + "After.csv";
-        writeFile(rootpath + fileName, resultList);
+        //stock2018-05-13-sortbyvalumeAfterAvg.csv  按14:30之后的交易量排名
+        String fileName1= fileName.substring(0, fileName.length() - 4) + "-sortbyvalumeAfterAvg.csv";
+        writeFile(rootpath + fileName1, resultList);
 
         //
         Collections.sort(resultList, new Comparator<StockStatistic>() {
@@ -108,12 +110,46 @@ public class StockDemo {
             }
         });
 
-        fileName = fileName.substring(0, fileName.length() - 4) + "-Before.csv";
-        writeFile(rootpath + fileName, resultList);
+        //按14：30之后的交易量与当前之前时间的交易量比例排名
+        String fileName2 = fileName.substring(0, fileName.length() - 4) + "-sortbyvalumeAfterAvgRate.csv";
+        writeFile(rootpath + fileName2, resultList);
 
 
-        //增加发邮件的功能
-        sendMail(rootpath, fileName, (b - a));
+        //增加发邮件的功能 //补全股票名称，所属板块
+        sendMail(rootpath, fileName2, (b - a),stockMap);
+
+
+
+    }
+
+    private static HashMap formap(List<String> stockList) {
+        HashMap map = new HashMap();
+        for (String str : stockList) {
+            String arr[]=str.split(",");
+
+            Stock stock=new Stock();
+            stock.setSymbol(arr[0]);
+            stock.setCode(arr[1]);
+            stock.setName(arr[2]);
+            stock.setCurrent(arr[3]);
+            stock.setPercent(arr[4]);
+            stock.setChange(arr[5]);
+            stock.setHigh(arr[6]);
+            stock.setLow(arr[7]);
+            stock.setHigh52w(arr[8]);
+            stock.setLow52w(arr[9]);
+            stock.setMarketcapital(arr[10]);
+            stock.setAmount(arr[11]);
+            stock.setType(arr[12]);
+            stock.setPettm(arr[13]);
+            stock.setVolume(arr[14]);
+            stock.setHasexist(arr[15]);
+
+            map.put(stock.getSymbol(), stock);
+        }
+
+
+        return map;
     }
 
     /**
@@ -224,20 +260,48 @@ public class StockDemo {
         return resultList;
     }
 
-    private static void sendMail(String rootpath, String fileName, long useTime) {
+    private static void sendMail(String rootpath, String fileName, long useTime,HashMap<String,Stock> stockMap) {
         List<String> stockList = readFile(rootpath + fileName);
         String[] to = new String[]{"lzc.java@icloud.com", "lzc_alioo@163.com"};
-        String subject = "股票信息#" + fileName + "#耗时" + useTime + "ms";
-        String html = "<html><head></head><body>";
+        String subject = "股票信息#耗时" + useTime + "ms,#"+ fileName ;
+        StringBuffer html = new StringBuffer("<html><head></head><body>") ;
+        html.append("<table>");
+        html.append("<tr>")
+                .append("<td>序号</td>")
+                .append("<td>symbol</td>")
+                .append("<td>当前股价</td>")
+                .append("<td>今日涨幅</td>")
+                .append("<td>14:30前交易量均值</td>")
+                .append("<td>14:30后交易量均值</td>")
+            .append("</tr>");
+
 
         int len = stockList.size() > 100 ? 100 : stockList.size();
-        for (int i = 0; i < len; i++) {
-            html = html + "<div>[" + i + "]" + stockList.get(i) + "</div>";
-        }
-        html = html + "</body></html>";
 
-        MailUtil.inlineFileMail(to, subject, html, null);
+        for (int i = 0; i < len; i++) {
+            String arr[]=stockList.get(i).split(",");
+            String symbol = arr[0];
+            Stock stock = stockMap.get(symbol);
+
+            html.append("<tr>")
+                    .append("<td>"+i+"</td>")
+                    .append("<td>"+symbol+"</td>")
+                    .append("<td>"+stock.getCurrent()+"</td>")
+                    .append("<td>"+stock.getPercent()+"</td>")
+                    .append("<td>"+arr[1]+"</td>")
+                    .append("<td>"+arr[2]+"</td>")
+            .append("</tr>");
+
+        }
+
+        html.append("</table>");
+        html.append("</body></html>");
+
+        MailUtil.inlineFileMail(to, subject, html.toString(), null);
     }
+
+
+
 
 
     static String getRightFileName(String rootpath) {
@@ -380,7 +444,7 @@ public class StockDemo {
 class StockChart {
     private boolean success;
     private List<StockDetail> chartlist;
-    private Stock stock;
+    private StockInfo stock;
 
     public boolean isSuccess() {
         return success;
@@ -398,16 +462,16 @@ class StockChart {
         this.chartlist = chartlist;
     }
 
-    public Stock getStock() {
+    public StockInfo getStock() {
         return stock;
     }
 
-    public void setStock(Stock stock) {
+    public void setStock(StockInfo stock) {
         this.stock = stock;
     }
 }
 
-class Stock {
+class StockInfo {
     private String symbol;
 
     public String getSymbol() {
