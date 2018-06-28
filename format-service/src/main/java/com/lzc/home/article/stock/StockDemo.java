@@ -33,14 +33,14 @@ public class StockDemo {
     public static void main(String[] args) throws ParseException {
 
         //重新从配置文件中获取cookieStr
-        try{
-            new ClassPathXmlApplicationContext(new String[] { "spring-config.xml" });
-            logger.info("{}服务已启动", new Object[]{ bootPath });
+        try {
+            new ClassPathXmlApplicationContext(new String[]{"spring-config.xml"});
+            logger.info("{}服务已启动", new Object[]{bootPath});
 
-        }catch(Throwable ex){
-            logger.error("服务已启动异常:{}", new Object[]{ ex.getLocalizedMessage(), ex });
+        } catch (Throwable ex) {
+            logger.error("服务已启动异常:{}", new Object[]{ex.getLocalizedMessage(), ex});
         }
-        cookieStr= PropertyPlaceholder.getProperty("cookieStr");
+        cookieStr = PropertyPlaceholder.getProperty("cookieStr");
 
 
         String rootpath = "/export/Logs/f.alioo.online/";
@@ -57,33 +57,11 @@ public class StockDemo {
         HashMap stockMap = formap(stockList);
 
 
-
         long a = System.currentTimeMillis();
-
         List<StockStatistic> resultList = batch(stockList);
-
         long b = System.currentTimeMillis();
 
-
-        Collections.sort(resultList, new Comparator<StockStatistic>() {
-            @Override
-            public int compare(StockStatistic o1, StockStatistic o2) {
-                if (o1 == null && o2 == null) {
-                    return 0;
-                } else if (o1 == null && o2 != null) {
-                    return -1;
-                } else if (o1 != null && o2 == null) {
-                    return -1;
-                } else {
-                    long tmp = o1.getValumeAfterAvg() - o2.getValumeAfterAvg();
-                    return -(int) tmp;
-                }
-            }
-        });
-
-        //stock2018-05-13-sortbyvalumeAfterAvg.csv  按14:30之后的交易量排名
-        String fileName1= fileName.substring(0, fileName.length() - 4) + "-sortbyvalumeAfterAvg.csv";
-        writeFile(rootpath + fileName1, resultList);
+        String batchEndTime=DateTimeUtil.getDateTimeString();
 
         //
         Collections.sort(resultList, new Comparator<StockStatistic>() {
@@ -116,8 +94,7 @@ public class StockDemo {
 
 
         //增加发邮件的功能 //补全股票名称，所属板块
-        sendMail(rootpath, fileName2, (b - a),stockMap);
-
+        sendMail(rootpath, fileName2, batchEndTime,(b - a), stockMap);
 
 
     }
@@ -125,9 +102,9 @@ public class StockDemo {
     private static HashMap formap(List<String> stockList) {
         HashMap map = new HashMap();
         for (String str : stockList) {
-            String arr[]=str.split(",");
+            String arr[] = str.split(",");
 
-            Stock stock=new Stock();
+            Stock stock = new Stock();
             stock.setSymbol(arr[0]);
             stock.setCode(arr[1]);
             stock.setName(arr[2]);
@@ -208,7 +185,7 @@ public class StockDemo {
 
                         } catch (Exception e) {
 
-                            if (e instanceof SocketException) {
+                            if (e instanceof SocketException ) {
                                 long sleepTime = 2000L + new Random().nextInt(2000);
                                 Thread.sleep(sleepTime);
 
@@ -260,12 +237,15 @@ public class StockDemo {
         return resultList;
     }
 
-    private static void sendMail(String rootpath, String fileName, long useTime,HashMap<String,Stock> stockMap) {
+    private static void sendMail(String rootpath, String fileName,String batchEndTime ,long useTime, HashMap<String, Stock>
+            stockMap) {
         List<String> stockList = readFile(rootpath + fileName);
         String[] to = new String[]{"lzc.java@icloud.com", "lzc_alioo@163.com"};
-        String subject = "股票信息#耗时" + useTime + "ms,#"+ fileName ;
-        StringBuffer html = new StringBuffer("<html><head></head><body>") ;
-        html.append("<table>");
+        String subject = "股票"+batchEndTime+",耗时" + useTime + "ms,#" + fileName;
+        StringBuffer html = new StringBuffer("<html><head>")
+                .append("<style> table{ border-collapse: collapse} td {border:1px solid #ddd;} </style>")
+                .append("</head><body>");
+        html.append("<table >");
         html.append("<tr>")
                 .append("<td>序号</td>")
                 .append("<td>symbol</td>")
@@ -274,25 +254,27 @@ public class StockDemo {
                 .append("<td>今日涨幅</td>")
                 .append("<td>14:30前交易量均值</td>")
                 .append("<td>14:30后交易量均值</td>")
-            .append("</tr>");
+                .append("<td>交易占比</td>")
+                .append("</tr>");
 
 
         int len = stockList.size() > 100 ? 100 : stockList.size();
 
         for (int i = 0; i < len; i++) {
-            String arr[]=stockList.get(i).split(",");
+            String arr[] = stockList.get(i).split(",");
             String symbol = arr[0];
             Stock stock = stockMap.get(symbol);
 
             html.append("<tr>")
-                    .append("<td>"+i+"</td>")
-                    .append("<td>"+symbol+"</td>")
-                    .append("<td>"+stock.getName()+"</td>")
-                    .append("<td>"+stock.getCurrent()+"</td>")
-                    .append("<td>"+stock.getPercent()+"</td>")
-                    .append("<td>"+arr[1]+"</td>")
-                    .append("<td>"+arr[2]+"</td>")
-            .append("</tr>");
+                    .append("<td>" + i + "</td>")
+                    .append("<td><a href='https://xueqiu.com/S/"+symbol+"' target='_blank'>" + symbol + "</a></td>")
+                    .append("<td>" + stock.getName() + "</td>")
+                    .append("<td>" + stock.getCurrent() + "</td>")
+                    .append("<td>" + stock.getPercent() + "</td>")
+                    .append("<td>" + arr[2] + "</td>")
+                    .append("<td>" + arr[4] + "</td>")
+                    .append("<td>" + arr[5] + "</td>")
+                    .append("</tr>");
 
         }
 
@@ -301,9 +283,6 @@ public class StockDemo {
 
         MailUtil.inlineFileMail(to, subject, html.toString(), null);
     }
-
-
-
 
 
     static String getRightFileName(String rootpath) {
@@ -392,8 +371,21 @@ public class StockDemo {
             valumeBeforeAvg = volumeBeforeSum / volumeBeforeCount;
         }
 
-        logger.info("[" + i + "]symbol=" + symbol + ",valumeAfterAvg=" + valumeAfterAvg + ",valumeBeforeAvg=" + valumeBeforeAvg);
-        StockStatistic stockStatistic = new StockStatistic(symbol, valumeAfterAvg, valumeBeforeAvg);
+        logger.info("[" + i + "]symbol=" + symbol +
+                ",volumeBeforeSum=" + volumeBeforeSum +
+                ",volumeBeforeCount=" + volumeBeforeCount +
+                ",valumeBeforeAvg=" + valumeBeforeAvg +
+                ",volumeAfterSum=" + volumeAfterSum +
+                ",volumeAfterCount=" + volumeAfterCount +
+                ",valumeAfterAvg=" + valumeAfterAvg
+        );
+        StockStatistic stockStatistic = new StockStatistic(
+                symbol,
+                volumeBeforeSum,
+                valumeBeforeAvg,
+                volumeAfterSum,
+                valumeAfterAvg
+        );
 
         return stockStatistic;
     }
@@ -556,13 +548,17 @@ class StockStatistic {
 
     //    logger.info("symbol=" + symbol + ",valumeAfterAvg=" + valumeAfterAvg + ",valumeBeforeAvg=" + valumeBeforeAvg);
     private String symbol;
+    private long volumeAfterSum;
     private long valumeAfterAvg;
+    private long volumeBeforeSum;
     private long valumeBeforeAvg;
 
-    public StockStatistic(String symbol, long valumeAfterAvg, long valumeBeforeAvg) {
+    public StockStatistic(String symbol, long volumeBeforeSum, long valumeBeforeAvg, long volumeAfterSum, long valumeAfterAvg) {
         this.symbol = symbol;
-        this.valumeAfterAvg = valumeAfterAvg;
+        this.volumeBeforeSum = volumeBeforeSum;
         this.valumeBeforeAvg = valumeBeforeAvg;
+        this.volumeAfterSum = volumeAfterSum;
+        this.valumeAfterAvg = valumeAfterAvg;
     }
 
     public String getSymbol() {
@@ -589,14 +585,31 @@ class StockStatistic {
         this.valumeBeforeAvg = valumeBeforeAvg;
     }
 
+    public long getVolumeAfterSum() {
+        return volumeAfterSum;
+    }
+
+    public void setVolumeAfterSum(long volumeAfterSum) {
+        this.volumeAfterSum = volumeAfterSum;
+    }
+
+    public long getVolumeBeforeSum() {
+        return volumeBeforeSum;
+    }
+
+    public void setVolumeBeforeSum(long volumeBeforeSum) {
+        this.volumeBeforeSum = volumeBeforeSum;
+    }
+
     @Override
     public String toString() {
         double b = -1;
-        if (valumeBeforeAvg != 0) {
-            b = valumeAfterAvg * 1.0 / valumeBeforeAvg;
+        if (valumeAfterAvg != 0) {
+            b = valumeBeforeAvg * 1.0 / valumeAfterAvg;
         }
 
-        return symbol + ", " + valumeAfterAvg + ", " + valumeBeforeAvg + "," + df.format(b);
+        return symbol + ", " + volumeBeforeSum + "," + valumeBeforeAvg + ", " + volumeAfterSum + "," + valumeAfterAvg +
+                "," + df.format(b);
     }
 }
 
