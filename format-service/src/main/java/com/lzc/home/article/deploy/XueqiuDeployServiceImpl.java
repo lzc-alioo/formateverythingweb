@@ -27,7 +27,7 @@ public class XueqiuDeployServiceImpl implements DeployService {
     private static final Logger logger = LoggerFactory.getLogger(XueqiuDeployServiceImpl.class);
 
 
-    @Value(value = "${shouqiCookieStr}")
+    @Value(value = "${cookieStr}")
     private String cookieStr;
 
     public void deploy() {
@@ -79,7 +79,7 @@ public class XueqiuDeployServiceImpl implements DeployService {
 //        requestParams.put("type", "11,12");
 //        requestParams.put("_", "1523111500651");
 
-        cookieStr = "evice_id=6bebda03f1df19b52b9584413a5a1924; __utmz=1.1526146152.1.1.utmcsr=(direct)|utmccn=(direct)|utmcmd=(none); _ga=GA1.2.301831906.1526146152; s=fo11sg4sxv; aliyungf_tc=AQAAAJzYnyjAjg4AgvIN0hs7aTN4ydF3; xq_a_token=019174f18bf425d22c8e965e48243d9fcfbd2cc0; xq_a_token.sig=_pB0kKy3fV9fvtvkOzxduQTrp7E; xq_r_token=2d465aa5d312fbe8d88b4e7de81e1e915de7989a; xq_r_token.sig=lOCElS5ycgbih9P-Ny3cohQ-FSA; _gid=GA1.2.601592551.1529498187; _gat_gtag_UA_16079156_4=1; u=701529498187452; Hm_lvt_1db88642e346389874251b5a1eded6e3=1527056942,1528439693,1529498187; __utma=1.301831906.1526146152.1528439701.1529498191.4; __utmc=1; __utmt=1; Hm_lpvt_1db88642e346389874251b5a1eded6e3=1529498203; __utmb=1.2.10.1529498191";
+//        cookieStr = "evice_id=6bebda03f1df19b52b9584413a5a1924; __utmz=1.1526146152.1.1.utmcsr=(direct)|utmccn=(direct)|utmcmd=(none); _ga=GA1.2.301831906.1526146152; s=fo11sg4sxv; aliyungf_tc=AQAAAJzYnyjAjg4AgvIN0hs7aTN4ydF3; xq_a_token=019174f18bf425d22c8e965e48243d9fcfbd2cc0; xq_a_token.sig=_pB0kKy3fV9fvtvkOzxduQTrp7E; xq_r_token=2d465aa5d312fbe8d88b4e7de81e1e915de7989a; xq_r_token.sig=lOCElS5ycgbih9P-Ny3cohQ-FSA; _gid=GA1.2.601592551.1529498187; _gat_gtag_UA_16079156_4=1; u=701529498187452; Hm_lvt_1db88642e346389874251b5a1eded6e3=1527056942,1528439693,1529498187; __utma=1.301831906.1526146152.1528439701.1529498191.4; __utmc=1; __utmt=1; Hm_lpvt_1db88642e346389874251b5a1eded6e3=1529498203; __utmb=1.2.10.1529498191";
 
         Map<String, Object> headerMap = new HashMap<String, Object>();
         headerMap.put("Cookie", cookieStr);
