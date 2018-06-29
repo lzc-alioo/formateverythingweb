@@ -19,7 +19,7 @@ RUNNING_USER=admin
 BASEDIR=$(cd `dirname $0`/..; pwd)
 
 #需要启动的Java主程序（main方法类）
-APP_MAINCLASS=com.lzc.home.article.stock.StockDemo
+APP_MAINCLASS=com.lzc.home.article.stock.StockAnalysis
 
 #拼凑完整的classpath参数，包括指定lib目录下所有的jar,jdk6以后可以不用for循环了，支持配置lib目录
 CLASSPATH=$BASEDIR/.:$BASEDIR/lib/*

@@ -16,18 +16,18 @@ public class StockFilter {
 
         //String fileName = "stock" + DateTimeUtil.getDateString() + ".csv";
         //纠正文件名
-        String fileName = StockDemo.getRightFileName(rootpath);
+        String fileName = StockAnalysis.getRightFileName(rootpath);
 
         //stock2018-05-13After.csv
         fileName = fileName.substring(0, fileName.length() - 4) + "After.csv";
         fileName = fileName.substring(0, fileName.length() - 4) + "-Before.csv";
 
-        List<String> stockList = StockDemo.readFile(rootpath + fileName);
+        List<String> stockList = StockAnalysis.readFile(rootpath + fileName);
         String filterStr = "6007";
         List<String> newList = filter(stockList, filterStr);
 
         fileName = fileName.substring(0, fileName.length() - 4) + "-"+filterStr+".csv";
-        StockDemo.writeFile(rootpath+fileName,newList);
+        StockAnalysis.writeFile(rootpath+fileName,newList);
 
         logger.info("StockFilter end...");
 

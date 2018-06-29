@@ -22,9 +22,9 @@ import java.util.*;
 import java.util.concurrent.*;
 
 
-public class StockDemo {
-    private static final Logger logger = LoggerFactory.getLogger(StockDemo.class);
-    private static final String bootPath = StockDemo.class.getName();
+public class StockAnalysis {
+    private static final Logger logger = LoggerFactory.getLogger(StockAnalysis.class);
+    private static final String bootPath = StockAnalysis.class.getName();
 
 
     private static String cookieStr = "device_id=6bebda03f1df19b52b9584413a5a1924; __utmz=1.1526146152.1.1.utmcsr=(direct)" +
