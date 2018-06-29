@@ -1,5 +1,7 @@
 # /export/shell/deploy.sh
 
+. /etc/profile
+
 cd /export/work/gitstudy/formateverythingweb/
 git pull
 mvn clean -U install
