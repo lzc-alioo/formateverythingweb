@@ -14,4 +14,4 @@ mkdir $pathname
 cp -r format-service-1.0.0-SNAPSHOT-package/* $pathname
 
 chmod 777 $pathname/bin/*.sh
-$pathname/bin/start-analysis.sh
+$pathname/bin/start.sh
