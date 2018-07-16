@@ -8,10 +8,12 @@ mvn clean -U install
 
 cd /export/work/gitstudy/formateverythingweb/format-service/target
 
-pathname=/export/packages/`date '+%Y%m%d.%H%M%S'`/
-mkdir $pathname
+pathname=/export/packages/stock/`date '+%Y%m%d.%H%M%S'`/
+mkdir -p $pathname
 
 cp -r format-service-1.0.0-SNAPSHOT-package/* $pathname
+
+find /export/packages/stock/ -mtime +3|xargs -exec rm -rf {} \;
 
 chmod 777 $pathname/bin/*.sh
 $pathname/bin/start.sh

@@ -7,14 +7,12 @@ import java.util.Calendar;
 import java.util.Date;
 
 /**
- * com.jd.o2o.seller.order.DateTimeUtil <br>
- * Description.
  * <p/>
- * Copyright: Copyright (c) 2015年3月14日 上午9:33:12
+ * Copyright: Copyright (c) 2018年7月14日 上午9:33:12
  * <p/>
- * Company: 京东商城
+ * Company: 滴滴出行
  * <p/>
- * Author: liuzhichong@jd.com
+ * Author: liuzhichong@didichuxing.com
  * <p/>
  * Version: 1.0
  * <p/>
@@ -37,28 +35,12 @@ public class DateTimeUtil {
 
         long margin = time1 - time2;
 
-		/* 转化成天数 */
+        /* 转化成天数 */
         int ret = (int) Math.floor((double) margin / (1000 * 60 * 60 * 24));
 
         return ret;
     }
 
-    /**
-     * 获取两个日期对象相差天数
-     *
-     * @param date1str String yyyy-MM-dd
-     * @param date2str String yyyy-MM-dd
-     * @return int 日差值
-     */
-    public static int compareDay(String date1str, String date2str) {
-        if (date1str == null || date2str == null)
-            return 0;
-
-        Date date1 = toDate(date1str, "00:00:01");
-        Date date2 = toDate(date2str, "00:00:00");
-
-        return compareDay(date1, date2);
-    }
 
     /*
      * * 获取两个日期对象相差的小时数 @param date1 日期对象 @param date2 日期对象 @return int 相差小时数
@@ -98,30 +80,6 @@ public class DateTimeUtil {
         return ret;
     }
 
-    /**
-     * 获取两个日期对象相差月数
-     *
-     * @param date1 日期对象
-     * @param date2 日期对象
-     * @return int 月份差值
-     */
-    public static int compareMonth(Date date1, Date date2) {
-        if (date1 == null || date2 == null)
-            return 0;
-
-        int year = compareYear(date1, date2);
-
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(date1);
-        int month1 = calendar.get(Calendar.MONTH);
-
-        calendar.setTime(date2);
-        int month2 = calendar.get(Calendar.MONTH);
-
-		/* 进行比较 */
-        return 12 * year + (month1 - month2);
-
-    }
 
     /**
      * 获取两个日期对象相差秒数
@@ -145,26 +103,7 @@ public class DateTimeUtil {
         return longValue.intValue();
     }
 
-    /**
-     * 获取两个日期对象相差年数
-     *
-     * @param date2 日期对象
-     * @return int 年份差值
-     * @parma date1 日期对象
-     */
-    public static int compareYear(Date date1, Date date2) {
-        if (date1 == null || date2 == null)
-            return 0;
 
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(date1);
-        int year1 = calendar.get(Calendar.YEAR);
-
-        calendar.setTime(date2);
-        int year2 = calendar.get(Calendar.YEAR);
-
-        return year1 - year2;
-    }
 
     public static String converTime(String str, String format) {
         SimpleDateFormat df = new SimpleDateFormat("yyyyMMddhhmmss");
@@ -383,8 +322,6 @@ public class DateTimeUtil {
     public static String getDateTimeString(String format) {
         return toDateTimeString(new Date(), format);
     }
-
-
 
 
     /**
