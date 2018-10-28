@@ -24,14 +24,10 @@ sql格式化加强
 
 Java技术栈
 一个java老司机的技术文献
+ 
 
-各领风骚数百年，已属于历史，如今的社会如今的公司能够风骚十年已是不易。
-2008年，那一年，我大学毕业，京东的域名还叫做360buy.com，京东的老刘还在到处拉投资，
-那一年，还没有饿了么、美团之类的外卖平台，外卖商家还是通过雇人在写字楼前发小广告通过电话订餐
-机会总是给了那些有准备的人
-
-
-
-
-
-
+Spring Boot 默认将 /** 所有访问映射到以下目录：
+classpath:/static
+classpath:/public
+classpath:/resources
+classpath:/META-INF/resources
