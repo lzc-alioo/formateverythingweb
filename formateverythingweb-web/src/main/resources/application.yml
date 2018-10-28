@@ -6,7 +6,7 @@
 ##Dev Configuration
 #tomcat config
 server:
-  port: 8999
+  port: 8080
 spring:
   aop:
     auto: true
