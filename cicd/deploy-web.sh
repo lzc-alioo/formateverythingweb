@@ -3,6 +3,8 @@
 
 . /etc/profile
 . /export/shell/ltool/llog.sh
+. /export/shell/ltool/lpid.sh
+
 
 sourcepath=/export/work/gitstudy/formateverythingweb
 sourcejar=$sourcepath/formateverythingweb-web/target/formateverythingweb-web-1.0.0-SNAPSHOT.jar
