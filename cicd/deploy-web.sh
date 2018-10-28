@@ -26,7 +26,7 @@ log "构建项目 复制可执行程序开始"
 cp -r $sourcejar $targetpath
 cp -r $sourcebin  $targetpath
 
-if [ ! -f "$targetpath/$targetjar" ]; then
+if [ -f "$targetpath/$targetjar" ]; then
     echo "最新版本已经复制到运行目录中:$pathname$filename"
 else
     echo "最新版本未找到，放弃执行:$pathname$filename"
