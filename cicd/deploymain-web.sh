@@ -20,8 +20,6 @@ log "编译项目 编译最新代码开始"
 mvn clean -U install
 log "编译项目 编译最新代码结束"
 
-chmod 777 $targetpath/*.sh
-
 ./deploy-web.sh
 
 log "编译项目 结束"
