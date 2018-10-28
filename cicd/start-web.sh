@@ -11,6 +11,7 @@ targetpath=$BASEDIR
 targetjar=formateverythingweb-web-1.0.0-SNAPSHOT.jar
 
 log "启动项目 开始"
+log "启动项目 BASEDIR: $BASEDIR"
 
 JAVA=$JAVA_HOME/bin/java
 
