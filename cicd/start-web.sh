@@ -39,7 +39,7 @@ psid=0
 #   fi
 #}
 
-checkpid
+checkpid $targetjar
 
 if [ $psid -ne 0 ]; then
     echo "App is already running, current pid=$psid, it will killed by shell"
@@ -54,7 +54,7 @@ nohup $JAVA \
     -jar  \
     $targetpath/$targetjar >/dev/null 2>nohup.log &
 
-checkpid
+checkpid $targetjar
 
 if [ $psid -ne 0 ]; then
     echo "[OK]"
@@ -62,5 +62,5 @@ else
     echo "[Failed]"
 fi
 
-log "启动项目 结束"
+log "启动项目 结束.pid:$psid"
 
