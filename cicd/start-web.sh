@@ -12,12 +12,9 @@ BASEDIR=$(cd `dirname $0`/; pwd)
 JAVA=$JAVA_HOME/bin/java
 
 #执行程序启动所使用的系统用户，考虑到安全，推荐不使用root帐号
-RUNNING_USER=admin
-
-
+#RUNNING_USER=admin
 #需要启动的Java主程序（main方法类）
 #APP_MAINCLASS=com.lzc.home.article.launcher.ServiceLauncher
-
 #拼凑完整的classpath参数，包括指定lib目录下所有的jar,jdk6以后可以不用for循环了，支持配置lib目录
 #CLASSPATH=$BASEDIR/.:$BASEDIR/lib/*
 
