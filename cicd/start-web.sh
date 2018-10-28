@@ -3,11 +3,13 @@
 . /etc/profile
 . /export/shell/ltool/*.sh
 
-targetpath=/export/packages/formateverythingweb-web/`date '+%Y%m%d.%H%M%S'`
-targetjar=formateverythingweb-web-1.0.0-SNAPSHOT.jar
-
 #Java程序所在的目录（当前start.sh文件的上一级目录）
 BASEDIR=$(cd `dirname $0`/; pwd)
+
+
+targetpath=$BASEDIR
+targetjar=formateverythingweb-web-1.0.0-SNAPSHOT.jar
+
 
 JAVA=$JAVA_HOME/bin/java
 
@@ -47,7 +49,7 @@ nohup $JAVA \
     -Dfile.encoding="UTF-8" \
     $JAVA_OPTS \
     -jar  \
-    $targetjar >/dev/null 2>nohup.log &
+    $targetpath/$targetjar >/dev/null 2>nohup.log &
 
 checkpid
 
