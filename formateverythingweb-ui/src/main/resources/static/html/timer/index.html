@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="x5-page-mode" content="app">
+    <meta name="x5-fullscreen" content="true">
+
+    <title>计时器</title>
+    <meta name="description" content="计时器,秒表,timer,超级好用的计时器">
+    <meta name="Keywords" content="计时器,秒表,timer,超级好用的计时器">
+    <meta name="author" content="alioo <lzc.java@icloud.com>">
+    <link rel="stylesheet" href="/css/app.css">
+    <link rel="stylesheet" href="/css/timer.css">
+    <script type="text/javascript" src="/webjars/jquery/jquery.js"></script>
+    <script type="text/javascript" src="/js/app.js"></script>
+
+    <script>
+        var _hmt = _hmt || [];
+        (function () {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?0650df3b90de1b6a01acc72869daf305";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+
+</head>
+<body>
+<div id="index" class="page clearfix">
+    <div class="left"></div>
+<!--##    #parse("/common/left.vm")-->
+    <div class="container">
+        <!--#parse("/common/top.vm")-->
+        <div class="header"></div>
+        <div class="content bgtimer clearfix">
+            <div class="lf message">
+                <!-- 定义canvas画布，包括宽度和高度，还有背景颜色 -->
+                <canvas id="clock" width="440" height="440" style="background:#373430">
+                    你的浏览器不支持canvas标！
+                </canvas>
+                <div class="runner runner-start"><div>开始</div></div>
+                <div class="other">
+                    <div class="other-title">单击空格键也可以启动和暂停哟</div>
+                    <div class="statistic-data none">
+                        <div class="fast">最快用时<span></span></div>
+                        <div class="slow">最慢用时<span></span></div>
+                        <div class="average">平均用时<span></span></div>
+                    </div>
+                </div>
+            </div>
+            <div class="lf history">
+                <div class="history-title">最近20条计时记录</div>
+                <div class="history-title2">(双击可删除选中的那一条)</div>
+                <div class="history-data">
+                    <!--<div><span class="history-tip">1</span><span class="history-text">00:00.738<span class='tip'>双击删除我吧</span></span></div>-->
+                    <!--<div><span class="history-tip">1</span><span class="history-text">00:00.738<span class='tip'>双击删除我吧</span></span></div>-->
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="/js/timer.js"></script>
+<script type="text/javascript" >
+    $(".left").load("../common/left.html");
+    $(".header").load("../common/top.html");
+</script>
+</body>
+</html>

@@ -1,0 +1,101 @@
+### Useage ###############################################################
+## Active specific profile:
+##    java -jar -Dspring.profiles.active=test boot-1.0.0-SNAPSHOT.jar
+###########################################################################
+
+##Dev Configuration
+#tomcat config
+server:
+  port: 8999
+spring:
+  aop:
+    auto: true
+    proxy-target-class: false
+  #设置国际化配置文件存放在classpath:/i18n目录下
+  messages:
+    basename: i18n/messages
+    cookieName: lean-locale
+    timeZoneOffsetCookieName: lean-timezone
+    defaultTimeZone: -7
+    defaultLocale: zh_CN
+multipart:
+  maxFileSize: 50Mb
+  maxRequestSize: 50Mb
+
+swagger:
+  authentication:
+    token: 0e36f9c813df05da76ee2babddb745646ed7251c
+  service:
+    basePath: /
+
+personelMasterData:
+  appId: 100709001
+  key: b9f3f19b02d84ada9a28f9502ff2f4049dc1758b576040c385c4a92c30af78e6bbb138c92ac845c9810ca77007312b9e30d21f8081014c4392940ec4189af079
+
+#############################
+########     dev     ########
+#############################
+---
+application:
+  name: @project.artifactId@
+  version: @project.version@
+#spring
+spring:
+  profiles: dev
+  data:
+    rest:
+      base-path: /api
+    DOMAIN: lean-dev.intra.alioo.com
+    authEnable: true
+    BASE: http://lean-dev.intra.alioo.com
+    taiURL: http://tai-dev.intra.alioo.com
+    taiToken: 4cd1aee024e340cdae2a8b89332c73e8
+    projectApiURL: http://api-kylin-xg02.intra.alioo.com/EP_project_management_platform_oe_pmp_project_service_dev
+    projectApiToken: b546b2c57cd944c38b11e8bb0d24ceca
+    cooperApiURL: http://api-kylin-xg02.intra.alioo.com/EP_CLOUD_DISK_oe_openapi_cooper_server_test/openapi
+    cooperApiToken: fc8eebb51d2646dd9c26115d070389f1
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    driverClassName: com.mysql.jdbc.Driver
+    url: jdbc:mysql://114.116.89.193:13306/alioo_dev?useUnicode=true&characterEncoding=utf8&autoReconnect=true
+    &&useSSL=false
+    username: root
+    password: Mylinux1#
+    initialSize: 5
+    minIdle: 5
+    maxActive: 20
+    maxWait: 60000
+    timeBetweenEvictionRunsMillis: 60000
+    minEvictableIdleTimeMillis: 300000
+    validationQuery: SELECT 'x'
+    testWhileIdle: true
+    testOnBorrow: false
+    testOnReturn: false
+    poolPreparedStatements: true
+    maxPoolPreparedStatementPerConnectionSize: 20
+    filters: stat
+    removeAbandoned: true
+    removeAbandonedTimeoutMillis: 3600000
+  redis:
+    socket-host: 10.96.88.222
+    socket-port: 6379
+    host: 10.96.88.222,10.96.88.222,10.96.88.222
+    ports: 6377,6378,6379
+    maxIdle: 200
+    maxWaitMillis: 800
+    timeout: 3000
+    pool.max-idle: 8
+    pool.max-wait: -1
+    password: 123456
+  GIFT:
+    upload_url: http://100.69.238.64:8000/resource/
+    select_url: http://100.69.238.65:8000/resource/
+    download_url: http://100.69.238.63/static/
+
+#logging
+logging:
+  path: /home/alioo/alioo-standard-project/logs
+  config: classpath:logback-spring.xml
+  level.root: WARN
+  level.com.alioo.format: INFO
+  level.org.springframework: DEBUG

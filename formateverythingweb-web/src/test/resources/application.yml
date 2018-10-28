@@ -1,0 +1,68 @@
+### Useage ###############################################################
+## Active specific profile:
+##    java -jar -Dspring.profiles.active=test boot-1.0.0-SNAPSHOT.jar
+###########################################################################
+
+##Dev Configuration
+#tomcat config
+server:
+  port: 8999
+
+application:
+  name: application-boot
+  version: 1.0.0
+  servicename: alioo-standard-project-server
+
+
+
+multipart:
+  maxFileSize: 50Mb
+  maxRequestSize: 50Mb
+
+swagger:
+  authentication:
+    token: 0e36f9c813df05da76ee2babddb745646ed7251c
+  service:
+    basePath: /
+
+personelMasterData:
+  appId: 100709001
+  key: b9f3f19b02d84ada9a28f9502ff2f4049dc1758b576040c385c4a92c30af78e6bbb138c92ac845c9810ca77007312b9e30d21f8081014c4392940ec4189af079
+
+
+#spring
+spring:
+  profiles: ut
+  data:
+    rest:
+      base-path: /api
+
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    driverClassName: com.mysql.jdbc.Driver
+    url: jdbc:mysql://10.96.238.10:10236/alioo-standard-project_dev?useUnicode=true&amp;characterEncoding=utf8mb4&autoReconnect=true&&useSSL=false
+    username: user_alioo-standard-project_dev
+    password: njopebcemallikni
+    initialSize: 5
+    minIdle: 5
+    maxActive: 20
+    maxWait: 60000
+    timeBetweenEvictionRunsMillis: 60000
+    minEvictableIdleTimeMillis: 300000
+    validationQuery: SELECT 'x'
+    testWhileIdle: true
+    testOnBorrow: false
+    testOnReturn: false
+    poolPreparedStatements: true
+    maxPoolPreparedStatementPerConnectionSize: 20
+    filters: stat
+    removeAbandoned: true
+    removeAbandonedTimeoutMillis: 3600000
+
+    
+#logging
+logging:
+  path: ./logs
+  config: classpath:logback-spring.xml
+  level.root: WARN
+  level.org.springframework: INFO

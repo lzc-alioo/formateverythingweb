@@ -1,0 +1,31 @@
+.inputDiv, .outputDiv {
+    /*width: 100%;*/
+    padding: 20px 20px 20px 20px;
+    background-color: #fff;
+}
+.inputDiv {
+    /*height: 200px;*/
+    position: relative;
+}
+.inputDiv:hover{
+    box-shadow: -10px 0 20px #d7d7d7,0 -10px 20px #d7d7d7,10px 0 20px #d7d7d7,0 10px 20px #d7d7d7;
+}
+
+.inputDiv .title{
+    border-bottom: 1px solid #ccc;
+    font-weight: 600;
+    color: #333333;
+    padding-bottom: 20px;
+}
+.content_type_1{
+    width: 14px;
+    height: 14px;
+    display: inline-block;
+    background-color: #67b73c;
+}
+.content_type_2{
+    width: 14px;
+    height: 14px;
+    display: inline-block;
+    background-color: #337ab3;
+}

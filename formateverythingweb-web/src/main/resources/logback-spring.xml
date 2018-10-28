@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration debug="true" scan="true" scanPeriod="10 seconds">
+    <property name="encoding" value="UTF-8"/>
+    <property name="normal-pattern"
+              value="%d{HH:mm:ss.SSS}[%thread] %highlight(%-5level) %cyan(%logger{15}) - %msg %c:%L%n"/>
+    <property name="trace-pattern" value="[%level][%d{yyyy-MM-dd'T'HH:mm:ss.SSSZ}][%c:%L] %msg%n"/>
+    <jmxConfigurator/>
+
+    <!--控制台日志-->
+    <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>${normal-pattern}</pattern>
+            <charset>${encoding}</charset>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>TRACE</level>
+        </filter>
+    </appender>
+
+    <!--默认文件-->
+    <appender name="file-default"
+              class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_PATH}/formateverythingweb-default.log</file>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>INFO</level>
+        </filter>
+        <prudent>true</prudent>
+        <Append>true</Append>
+        <encoder>
+            <pattern>${normal-pattern}</pattern>
+            <charset>${encoding}</charset>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_PATH}/formateverythingweb-default.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <MaxHistory>10</MaxHistory>
+        </rollingPolicy>
+    </appender>
+
+    <!--错误以及以上级别日志-->
+    <appender name="file-error"
+              class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_PATH}/formateverythingweb-error.log</file>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>ERROR</level>
+        </filter>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <FileNamePattern>${LOG_PATH}/formateverythingweb-error.%d{yyyy-MM-dd}.log</FileNamePattern>
+            <MaxHistory>10</MaxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${normal-pattern}</pattern>
+            <charset>${encoding}</charset>
+        </encoder>
+    </appender>
+
+    <!--API访问日志，按天切片，留存30天。记录http url，parameter, method, execute time-->
+    <appender name="file-trace-API"
+              class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>TRACE</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <append>true</append>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <FileNamePattern>${LOG_PATH}/formateverythingweb-trace-API.%d{yyyy-MM-dd}.log</FileNamePattern>
+            <MaxHistory>10</MaxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${normal-pattern}</pattern>
+            <charset>${encoding}</charset>
+        </encoder>
+    </appender>
+
+    <logger name="com.alioo.lean.common.interceptor.APILogInterceptor" level="TRACE" additivity="false">
+        <appender-ref ref="file-trace-API"/>
+    </logger>
+
+    <!--邮件发送日志，按天切片，留存30天 -->
+    <appender name="mail-sener-log"
+              class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>DEBUG</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <append>true</append>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <FileNamePattern>${LOG_PATH}/formateverythingweb-mail.%d{yyyy-MM-dd}.log</FileNamePattern>
+            <MaxHistory>10</MaxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${normal-pattern}</pattern>
+            <charset>${encoding}</charset>
+        </encoder>
+    </appender>
+
+    <logger name="com.alioo.lean.common.utils.MailSendExecutor" level="DEBUG" additivity="false">
+        <appender-ref ref="mail-sener-log"/>
+    </logger>
+
+    <!--SQL操作日志，按天切片，留存30天-->
+    <appender name="file-db-slowsql"
+              class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>DEBUG</level>
+        </filter>
+        <append>true</append>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <FileNamePattern>${LOG_PATH}/formateverythingweb-db-slowsql.%d{yyyy-MM-dd}.log</FileNamePattern>
+            <MaxHistory>10</MaxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${normal-pattern}</pattern>
+            <charset>${encoding}</charset>
+        </encoder>
+    </appender>
+
+    <!-- 接入广州ELK -->
+    <appender name="alioo-trace-logger-appender"
+              class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_PATH}/alioo-trace-log/alioo.log</file>
+        <prudent>true</prudent>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>DEBUG</level>
+        </filter>
+        <Append>true</Append>
+        <encoder>
+            <pattern>${trace-pattern}</pattern>
+            <charset>${encoding}</charset>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_PATH}/alioo-trace-log/alioo.log.%d{yyyyMMddHH}</fileNamePattern>
+            <MaxHistory>180</MaxHistory>
+        </rollingPolicy>
+    </appender>
+    <logger name="com.alioo.util.log.TraceLogUtils" level="DEBUG" >
+        <appender-ref ref="alioo-trace-logger-appender" />
+    </logger>
+
+    <logger name="com.alioo" level="${logging.level.com.alioo}" >
+        <appender-ref ref="file-default" />
+    </logger>
+
+    <!--<logger name="com.alioo.lean.common.interceptor.MyBatisSQLAuditInterceptor" level="DEBUG" additivity="false">-->
+        <!--<appender-ref ref="file-db-slowsql"/>-->
+    <!--</logger>-->
+
+    <logger name="org.springframework" level="${logging.level.org.springframework}" additivity="true">
+        <appender-ref ref="file-default"/>
+    </logger>
+
+    <logger name="org.apache.http" level="INFO" >
+        <appender-ref ref="file-default" />
+    </logger>
+
+    <root>
+        <appender-ref ref="console"/>
+        <appender-ref ref="file-default"/>
+        <appender-ref ref="file-error"/>
+        <appender-ref ref="file-trace-API"/>
+        <appender-ref ref="mail-sener-log"/>
+    </root>
+</configuration>
