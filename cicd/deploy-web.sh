@@ -1,7 +1,8 @@
+#!/usr/bin/env bash
 # /export/shell/deploy.sh
 
 . /etc/profile
-. /export/shell/ltool/*.sh
+. /export/shell/ltool/llog.sh
 
 sourcepath=/export/work/gitstudy/formateverythingweb
 sourcejar=$sourcepath/formateverythingweb-web/target/formateverythingweb-web-1.0.0-SNAPSHOT.jar

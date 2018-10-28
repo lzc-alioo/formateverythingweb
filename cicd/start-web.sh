@@ -1,7 +1,8 @@
-# /export/shell/deploy.sh
+#!/usr/bin/env bash
 
 . /etc/profile
-. /export/shell/ltool/*.sh
+. /export/shell/ltool/llog.sh
+. /export/shell/ltool/lpid.sh
 
 #Java程序所在的目录（当前start.sh文件的上一级目录）
 BASEDIR=$(cd `dirname $0`/; pwd)
