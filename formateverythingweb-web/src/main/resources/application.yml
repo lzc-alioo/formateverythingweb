@@ -1,6 +1,6 @@
 ### Useage ###############################################################
 ## Active specific profile:
-##    java -jar -Dspring.profiles.active=test boot-1.0.0-SNAPSHOT.jar
+##    java -jar -Dspring.profiles.active=dev boot-1.0.0-SNAPSHOT.jar
 ###########################################################################
 
 ##Dev Configuration
@@ -57,10 +57,9 @@ spring:
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
     driverClassName: com.mysql.jdbc.Driver
-    url: jdbc:mysql://114.116.89.193:13306/alioo_dev?useUnicode=true&characterEncoding=utf8&autoReconnect=true
-    &&useSSL=false
+    url: jdbc:mysql://114.116.89.193:13306/alioo_dev?useUnicode=true&characterEncoding=utf8&autoReconnect=true&useSSL=false
     username: root
-    password: Mylinux1#
+    password: mylinux1#
     initialSize: 5
     minIdle: 5
     maxActive: 20
@@ -94,8 +93,8 @@ spring:
 
 #logging
 logging:
-  path: /home/alioo/alioo-standard-project/logs
+  path: /home/alioo/formateverythingweb-web/logs
   config: classpath:logback-spring.xml
   level.root: WARN
   level.com.alioo.format: INFO
-  level.org.springframework: DEBUG
+  level.org.springframework: INFO

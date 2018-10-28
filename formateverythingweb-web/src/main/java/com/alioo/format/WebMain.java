@@ -27,6 +27,7 @@ public class WebMain {
             logger.info("formateverythingweb-web启动成功...");
         } catch (Throwable e) {
             logger.error("formateverythingweb-web启动异常", e);
+            e.printStackTrace();
         }
 
 
