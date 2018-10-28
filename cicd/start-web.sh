@@ -41,7 +41,7 @@ checkpid
 
 if [ $psid -ne 0 ]; then
     echo :App is already running, current pid=$psid, it will killed by shell
-    kill -9 $pid
+    kill -9 $psid
 fi
 
 nohup $JAVA \
