@@ -2,21 +2,8 @@
 
 . /etc/profile
 
-cd /export/work/gitstudy/formateverythingweb/
-git pull
-mvn clean -U install
-
-cd /export/work/gitstudy/formateverythingweb/formateverythingweb-web/target
-
-pathname=/export/packages/formateverythingweb-web/`date '+%Y%m%d.%H%M%S'`/
-mkdir -p $pathname
-
-cp -r format-service-1.0.0-SNAPSHOT-package/* $pathname
-
-find /export/packages/formateverythingweb-web// -mtime +3|xargs -exec rm -rf {} \;
-
-#chmod 777 $pathname/bin/*.sh
-#$pathname/bin/start-analysis.sh
+targetpath=/export/packages/formateverythingweb-web/`date '+%Y%m%d.%H%M%S'`
+targetjar=formateverythingweb-web-1.0.0-SNAPSHOT.jar
 
 
 JAVA=$JAVA_HOME/bin/java
@@ -25,7 +12,7 @@ JAVA=$JAVA_HOME/bin/java
 RUNNING_USER=admin
 
 #Java程序所在的目录（当前start.sh文件的上一级目录）
-BASEDIR=$(cd `dirname $0`/..; pwd)
+BASEDIR=$(cd `dirname $0`/; pwd)
 
 #需要启动的Java主程序（main方法类）
 #APP_MAINCLASS=com.lzc.home.article.launcher.ServiceLauncher
@@ -35,13 +22,13 @@ CLASSPATH=$BASEDIR/.:$BASEDIR/lib/*
 
 
 #java虚拟机启动参数
-JAVA_OPTS="-Xms64m -Xmx512m -Xmn64m -Dspring.profiles.active=dev -Djava.awt.headless=true $JAVA_OPTS"
+JAVA_OPTS=" -Dspring.profiles.active=dev -Dspring.datasource.password=Lzcmylinux1# -Xms64m -Xmx512m -Xmn64m -Djava.awt.headless=true $JAVA_OPTS"
 
 #初始化psid变量（全局）
 psid=0
 
 checkpid() {
-   javaps=`$JAVA_HOME/bin/jps -l | grep $APP_MAINCLASS`
+   javaps=`$JAVA_HOME/bin/jps -l | grep $targetjar`
 
    if [ -n "$javaps" ]; then
       psid=`echo $javaps | awk '{print $1}'`
@@ -62,7 +49,7 @@ nohup $JAVA \
     -Dfile.encoding="UTF-8" \
     $JAVA_OPTS \
     -jar  \
-    formateverythingweb-web-1.0.0-SNAPSHOT.jar >/dev/null 2>nohup.log &
+    $targetjar >/dev/null 2>nohup.log &
 
 checkpid
 
