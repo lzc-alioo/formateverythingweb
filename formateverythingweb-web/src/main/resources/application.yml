@@ -1,6 +1,6 @@
 ### Useage ###############################################################
 ## Active specific profile:
-##    java -jar -Dspring.profiles.active=dev boot-1.0.0-SNAPSHOT.jar
+##    java -jar -Dspring.profiles.active=dev  -Dspring.datasource.password=xxx   boot-1.0.0-SNAPSHOT.jar
 ###########################################################################
 
 ##Dev Configuration
