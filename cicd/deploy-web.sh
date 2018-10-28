@@ -37,7 +37,8 @@ log "构建项目 删除掉历史版本结束"
 
 chmod 777 $targetpath/*.sh
 
+log "构建项目 结束"
+
 $targetpath/start-web.sh
 
 
-log "构建项目 结束"
