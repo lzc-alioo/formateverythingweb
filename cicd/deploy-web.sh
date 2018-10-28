@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 # /export/shell/deploy.sh
+# 这个脚本不会去拉取最新代码，直接利用现有代码进行构建
+
 
 . /etc/profile
 . /export/shell/ltool/llog.sh
@@ -11,15 +13,6 @@ sourcejar=$sourcepath/formateverythingweb-web/target/formateverythingweb-web-1.0
 sourcebin=$sourcepath/cicd/start-web.sh
 
 log "构建项目 开始"
-
-log "构建项目 获取最新代码开始"
-cd $sourcepath
-git pull
-log "构建项目 获取最新代码结束"
-
-log "构建项目 编译最新代码开始"
-mvn clean -U install
-log "构建项目 编译最新代码结束"
 
 targetpath=/export/packages/formateverythingweb-web/`date '+%Y%m%d.%H%M%S'`
 targetjar=formateverythingweb-web-1.0.0-SNAPSHOT.jar
