@@ -1,6 +1,7 @@
 # /export/shell/deploy.sh
 
 . /etc/profile
+. /export/shell/ltool/*.sh
 
 targetpath=/export/packages/formateverythingweb-web/`date '+%Y%m%d.%H%M%S'`
 targetjar=formateverythingweb-web-1.0.0-SNAPSHOT.jar

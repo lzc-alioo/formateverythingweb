@@ -1,11 +1,11 @@
 # /export/shell/deploy.sh
 
+. /etc/profile
+. /export/shell/ltool/*.sh
+
 sourcepath=/export/work/gitstudy/formateverythingweb
 sourcejar=$sourcepath/formateverythingweb-web/target/formateverythingweb-web-1.0.0-SNAPSHOT.jar
 sourcebin=$sourcepath/cicd/start-web.sh
-
-. /etc/profile
-. $sourcepath/cicd/ltool/*.sh
 
 log "构建项目 开始"
 
