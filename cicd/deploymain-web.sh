@@ -22,6 +22,6 @@ log "编译项目 编译最新代码结束"
 
 chmod 777 $sourcepath/cicd/deploy-web.sh
 
-./$sourcepath/cicd/deploy-web.sh
+/$sourcepath/cicd/deploy-web.sh
 
 log "编译项目 结束"
