@@ -44,3 +44,4 @@ chmod 777 $targetpath/*.sh
 $targetpath/start-web.sh
 
 
+log "构建项目 结束"

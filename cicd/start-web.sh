@@ -1,15 +1,15 @@
 # /export/shell/deploy.sh
 
 . /etc/profile
-. /export/shell/ltool/lpid.sh
+. /export/shell/ltool/*.sh
 
 #Java程序所在的目录（当前start.sh文件的上一级目录）
 BASEDIR=$(cd `dirname $0`/; pwd)
 
-
 targetpath=$BASEDIR
 targetjar=formateverythingweb-web-1.0.0-SNAPSHOT.jar
 
+log "启动项目 开始"
 
 JAVA=$JAVA_HOME/bin/java
 
@@ -40,8 +40,9 @@ psid=0
 checkpid
 
 if [ $psid -ne 0 ]; then
-    echo :App is already running, current pid=$psid, it will killed by shell
+    echo "App is already running, current pid=$psid, it will killed by shell"
     kill -9 $psid
+
 fi
 
 nohup $JAVA \
@@ -59,4 +60,5 @@ else
     echo "[Failed]"
 fi
 
+log "启动项目 结束"
 
