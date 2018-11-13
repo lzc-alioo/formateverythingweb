@@ -12,6 +12,9 @@ public class Page<T> {
     private int size; //每页条数
     private int total;//总数据行数
 
+    public Page() {
+    }
+
     public Page(List<T> data, int total) {
         this.objectList = data;
         this.total = total;

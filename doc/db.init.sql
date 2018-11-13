@@ -1,14 +1,14 @@
 mysql -h 114.115.211.71 -P 13306 -u root -paabbcc05** -D alioo
 
-create database alioo  default character set 'utf8';
+create database alioo_dev  default character set 'utf8';
 
-use alioo
+use alioo_dev ;
 
 drop table article;
 CREATE TABLE `article` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `title` varchar(500) DEFAULT '' COMMENT '标题',
-  `content` longblob DEFAULT '' COMMENT '内容，属于富文本',
+  `content` longblob COMMENT '内容，属于富文本',
   `readCount` int(11) DEFAULT '0' COMMENT '在csdn阅读量',
   `commentCount` int(11) DEFAULT '0' COMMENT '在csdn评论量',
   `csdnLink` varchar(2000) DEFAULT '' COMMENT '在csdn中的原始链接',
@@ -27,7 +27,8 @@ CREATE TABLE `article` (
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 ;
 
 
-insert into Article(title,content,readCount,commentCount,csdnLink,graspTime,create_time,create_pin,update_time,update_pin)
+insert into article(title,content,readCount,commentCount,csdnLink,graspTime,create_time,create_pin,update_time,
+update_pin)
 values ('aaaa','bbbbbb',4,444,'http://blog.csdn.net/hl_java/article/details/78344667','20171028121212',
         now(),'lzc',now(),'llzzcc');
 

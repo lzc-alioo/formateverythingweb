@@ -9,9 +9,8 @@ import org.springframework.web.filter.CorsFilter;
 /**
  * @ClassName: com.alioo.format.web.config.CorsConfig
  * @Description:
- * @author: liuzhichong@didichuxing.com
+ * @author: liuzhichong
  * @date: 2018/09/02
- * @Copyright: 2018 www.didichuxing.com Inc. All rights reserved.
  */
 @Configuration
 public class CorsConfig {

@@ -32,7 +32,7 @@ public interface ArticleDAO {
             " select count(1)"  +
             " from " + TABLE +
             " where 1=1" +
-            " <if test=\"query.title != null \"> and title = %#{query.title}% </if>" +
+            " <if test=\"title != null \"> and title = %#{title}% </if>" +
             "</script>")
     public Integer listQueryCount(Article query);
 

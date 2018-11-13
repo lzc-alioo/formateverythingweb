@@ -35,6 +35,22 @@ public class  Article {
 
     private Date ts; //时间戳
 
+    public Article() {
+    }
+
+    public Article(String title, String content, int readCount, int commentCount, String csdnLink, String graspTime,
+                   int contentType, String contentDesc, Date updateTime) {
+        this.title = title;
+        this.content = content;
+        this.readCount = readCount;
+        this.commentCount = commentCount;
+        this.csdnLink = csdnLink;
+        this.graspTime = graspTime;
+        this.contentType = contentType;
+        this.contentDesc = contentDesc;
+        this.updateTime = updateTime;
+    }
+
     public void setId(int id){
         this.id = id;
     }
