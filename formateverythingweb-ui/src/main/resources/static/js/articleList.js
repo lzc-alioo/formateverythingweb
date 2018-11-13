@@ -76,7 +76,7 @@ $(function () {
                         var htmltmp=
                             "<div class='title-box'>"+
                             contentTypeStr+
-                            "<a href='/article/detail.html?id="+row.id+"' target='_blank'>"+row.title+"</a>"+
+                            "<a href='/html/article/detail.html?id="+row.id+"' target='_blank'>"+row.title+"</a>"+
                             "<span> ("+row.updateTime+")</span>"+
                             "</div>" ;
                         return htmltmp;
