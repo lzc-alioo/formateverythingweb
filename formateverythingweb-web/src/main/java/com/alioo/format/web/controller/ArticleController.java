@@ -44,6 +44,14 @@ public class ArticleController {
 
         Page<Article> pageBean = null;
         try {
+            if(page==null){
+                page=1;
+            }
+            if(pageSize==null){
+                pageSize = 20;
+            }
+
+
             Article query=new Article();
 
             pageBean = articleService.pageQuery(query, page,pageSize,null);
