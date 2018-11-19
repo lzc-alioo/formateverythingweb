@@ -72,7 +72,7 @@ public class TestController {
         pageNo = pageNo == null ? 1 : pageNo;
 
 
-        int start = (pageNo-1) * pageSize;
+        int start = (pageNo - 1) * pageSize;
         int end = start + pageSize;
 //        end = end > list.size() ? list.size() : end;
 
@@ -89,6 +89,31 @@ public class TestController {
             e.printStackTrace();
         }
         return retmap;
+    }
+
+
+    @ResponseBody
+    @RequestMapping(value = "/cardList")
+    public Object cardList(Integer pageSize, Integer pageNo, HttpServletRequest request, final HttpServletResponse
+            response) {
+        logger.debug(this + "request /list2,idx=");
+
+
+//        List<Map<String, Object>> list = new ArrayList<>();
+//        for (int i = 0; i < 4; i++) {
+        int i = (int) (Math.random() * 100);
+        Map<String, Object> map = new HashMap<>();
+        map.put("setup", "setup" + i);
+        map.put("punchline", "punchline" + i);
+
+//            list.add(map);
+//        }
+//
+//        Map<String, Object> retmap = new HashMap<>();
+//        retmap.put("data", list);
+
+
+        return map;
     }
 
 
