@@ -8,10 +8,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -68,8 +65,10 @@ public class FileUtil {
 //        String content = null;
         BufferedReader in = null;
         try {
-            in = new BufferedReader(new InputStreamReader(
-                    FileUtil.class.getClassLoader().getResourceAsStream(path)));
+//            in = new BufferedReader(new InputStreamReader(
+//                    FileUtil.class.getClassLoader().getResourceAsStream(path)));
+
+            in = new BufferedReader(new InputStreamReader(new FileInputStream(path)));
             StringBuffer buffer = new StringBuffer();
             String line = "";
             while ((line = in.readLine()) != null) {

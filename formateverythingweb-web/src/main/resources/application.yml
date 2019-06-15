@@ -57,9 +57,9 @@ spring:
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
     driverClassName: com.mysql.jdbc.Driver
-    url: jdbc:mysql://114.116.89.193:13306/alioo_dev?useUnicode=true&characterEncoding=utf8&autoReconnect=true&useSSL=false
+    url: jdbc:mysql://127.0.0.1:3317/alioo_dev?useUnicode=true&characterEncoding=utf8&autoReconnect=true&useSSL=false
     username: root
-    password: mylinux1#
+    password: 123456
     initialSize: 5
     minIdle: 5
     maxActive: 20
@@ -93,7 +93,7 @@ spring:
 
 #logging
 logging:
-  path: /home/alioo/formateverythingweb-web/logs
+  path: /export/Logs/formateverythingweb-web/logs
   config: classpath:logback-spring.xml
   level.root: WARN
   level.com.alioo.format: INFO

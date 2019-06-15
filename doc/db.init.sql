@@ -1,4 +1,6 @@
 mysql -h 114.115.211.71 -P 13306 -u root -paabbcc05** -D alioo
+mysql -h127.0.0.1 -P 3317 -uroot -p123456
+
 
 create database alioo_dev  default character set 'utf8';
 
@@ -34,8 +36,59 @@ values ('aaaa','bbbbbb',4,444,'http://blog.csdn.net/hl_java/article/details/7834
 
 
 
+drop procedure mydrop;
+delimiter ;;
+create procedure mydrop()
+begin
+  declare i int;
+  declare table_name VARCHAR(20);
+
+  set i=0;
+  while i<36 do
+
+    SET table_name = CONCAT('md5_',i);
+    SET @csql = CONCAT(
+    "drop TABLE ",table_name );
+
+    PREPARE create_stmt FROM @csql;
+    EXECUTE create_stmt;
+    SET i = i+1;
+
+  end while;
+end;;
+delimiter ;
+
+call mydrop();
 
 
 
+drop procedure mycreate;
+delimiter ;;
+create procedure mycreate()
+begin
+  declare i int;
+  declare table_name VARCHAR(20);
 
+  set i=0;
+  while i<36 do
+
+    SET table_name = CONCAT('md5_',i);
+    SET @csql = CONCAT(
+    "CREATE TABLE ",table_name,"(
+          `id` bigint(20) NOT NULL AUTO_INCREMENT,
+          `md5_b32` varchar(32)  DEFAULT '' COMMENT '32位md5值',
+          `md5_b16` varchar(16)  DEFAULT '' COMMENT '16位md5值',
+          `data`    varchar(100) DEFAULT '' COMMENT '字符串',
+          PRIMARY KEY (`id`)
+        ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 ; ");
+
+    PREPARE create_stmt FROM @csql;
+    EXECUTE create_stmt;
+    SET i = i+1;
+
+  end while;
+end;;
+delimiter ;
+
+call mycreate();
 
