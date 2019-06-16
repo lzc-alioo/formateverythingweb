@@ -9,6 +9,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.*;
+
 /**
  * Created by yujiayuan on 17/11/28.
  */
@@ -205,6 +206,52 @@ public class ToDAO {
             resultBuilder.append("    public int insert(");
             resultBuilder.append(ClassName);
             resultBuilder.append(" bean);");
+
+            // insertBatch
+            resultBuilder.append("\n\n");
+            resultBuilder.append("    @Insert({\"<script>\"+\" insert into \" + TABLE + \" ( \"\n");
+            for (int i = 0; i < fieldList.size(); i++) {
+
+                String field = fieldList.get(i);
+                String javaFieldName = Utils.handleName(field);
+                String tail = ", \"\n";
+                if (i == fieldList.size() - 1) {
+                    tail = "\"\n";
+                }
+                if (field.equals("create_time") || field.equals("last_update_time")) {
+                    resultBuilder.append("        + \" " + field + tail);
+                } else if (!fieldAuto.contains(field)) {
+                    resultBuilder.append("        + \" " + field + tail);
+                }
+            }
+            resultBuilder.append("        + \" ) values  \"\n");
+//            "<foreach collection='testLists' item='item' index='index' separator=','>",
+//                    "(#{item.实体属性1}, #{item.实体属性2}, #{item.实体属性3})",
+//                    "</foreach>",
+
+            resultBuilder.append("        + \"<foreach collection='list' item='item' index='index' separator=','>\"\n");
+            resultBuilder.append("        + \"(\"\n");
+            for (int i = 0; i < fieldList.size(); i++) {
+                String field = fieldList.get(i);
+                String javaFieldName = Utils.handleName(field);
+                String tail = ", \"\n";
+                if (i == fieldList.size() - 1) {
+                    tail = "\"\n";
+                }
+                if (field.equals("create_time") || field.equals("last_update_time")) {
+                    resultBuilder.append("        + \" " + " #{item." + javaFieldName + "}" + tail);
+                } else if (!fieldAuto.contains(field)) {
+                    resultBuilder.append("        + \" " + " #{item." + javaFieldName + "}" + tail);
+                }
+            }
+            resultBuilder.append("        + \")\"\n");
+            resultBuilder.append("        + \"</foreach>\"\n");
+            resultBuilder.append("        + \"</script>\"})\n");
+            resultBuilder.append("    public int insertBatch(");
+            resultBuilder.append("List<" + ClassName + "> ");
+            resultBuilder.append(" list);");
+
+
             // update
             resultBuilder.append("\n\n");
             resultBuilder.append("    @Update(\" update \" + TABLE + \" set \"\n");
