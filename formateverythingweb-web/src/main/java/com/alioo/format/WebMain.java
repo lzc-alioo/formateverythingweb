@@ -1,7 +1,8 @@
 package com.alioo.format;
 
-import com.alioo.format.dao.Md0DAO;
-import com.alioo.format.domain.Md0;
+import com.alioo.format.dao.Md2DAO;
+import com.alioo.format.domain.Md2;
+import com.alioo.util.ExchangeUtil;
 import com.alioo.util.FileUtil;
 import com.alioo.util.MD5Util;
 import com.alioo.util.spring.SpringUtil;
@@ -34,7 +35,9 @@ import java.util.stream.Stream;
 public class WebMain {
     private static Logger logger = LoggerFactory.getLogger(WebMain.class);
 
-    private static Md0DAO md0DAO;
+    //    private static Md0DAO md0DAO;
+//    private static Md1DAO md1DAO;
+    private static Md2DAO md2DAO;
 
     public static void main(String[] args) {
         try {
@@ -48,8 +51,9 @@ public class WebMain {
             e.printStackTrace();
         }
 
-        md0DAO = SpringUtil.getBean(Md0DAO.class);
-        logger.info(md0DAO.toString());
+//        md0DAO = SpringUtil.getBean(Md0DAO.class);
+//        md1DAO = SpringUtil.getBean(Md1DAO.class);
+        md2DAO = SpringUtil.getBean(Md2DAO.class);
 
 //        List<md0> list = new ArrayList<>();
 //        for (int i = 0; i < 10; i++) {
@@ -82,18 +86,25 @@ public class WebMain {
 //        }
 
         //排重dataset
+        logger.info("排重dataset init ");
         Set<String> dataset = new HashSet<>(10000000);
-        loadDataSet(md0DAO, dataset);
+        loadDataSet(md2DAO, dataset);
+        logger.info("排重dataset init done");
 
 
         String path = "/Users/alioo/temp/passwd";
 
         File[] filearr = new File(path).listFiles();
         for (int i = 0; i < filearr.length; i++) {
-            logger.info("file==" + filearr[i].getPath());
-//        String fileName = "/Users/alioo/Downloads/smzy_ruokonglignzidian/弱口令字典/rkolin3.TXT";
             String fileName = filearr[i].getPath();
-            doFile(md0DAO, dataset, fileName);
+            ExchangeUtil s = new ExchangeUtil();
+            String fileCode = ExchangeUtil.javaname[s.detectEncoding(new File(fileName))];
+
+            logger.info("file==" + filearr[i].getPath() + "，fileCode=" + fileCode);
+//        String fileName = "/Users/alioo/Downloads/smzy_ruokonglignzidian/弱口令字典/rkolin3.TXT";
+            doFile(md2DAO, dataset, fileName, fileCode);
+
+
         }
 
     }
@@ -107,35 +118,36 @@ public class WebMain {
 
     }
 
-    public static void loadDataSet(Md0DAO md0DAO, Set<String> dataset) {
+    public static void loadDataSet(Md2DAO mdDAO, Set<String> dataset) {
 
         int start = 0;
-        int count = 1000;
+        int count = 10000;
 
         while (true) {
-            List<Md0> list = md0DAO.list(start, count);
+            List<Md2> list = mdDAO.list(start, count);
             if (list == null || list.isEmpty()) {
                 break;
             }
 
-            for (Md0 md0 : list) {
-                dataset.add(md0.getData());
+            for (Md2 md : list) {
+                dataset.add(md.getData());
             }
 
             start = start + count;
+            logger.info("load.." + dataset.size());
 
         }
     }
 
-    public static void doFile(Md0DAO md0DAO, Set<String> dataset, String fileName) {
+    public static void doFile(Md2DAO md2DAO, Set<String> dataset, String fileName, String fileCode) {
         //read file into stream, try-with-resources
         try {
             AtomicInteger i = new AtomicInteger(0);
             AtomicInteger muti = new AtomicInteger(0);
 
-            List<Md0> list2 = new ArrayList<>(1000);
+            List<Md2> list2 = new ArrayList<>(1000);
 
-            Stream<String> stream = Files.lines(Paths.get(fileName), Charset.forName("GBK"));
+            Stream<String> stream = Files.lines(Paths.get(fileName), Charset.forName(fileCode));
             stream.forEach(line -> {
 //                if (i.get() > 100) {
 //                    return;
@@ -146,29 +158,38 @@ public class WebMain {
 
                 String data = line;
                 String b32 = MD5Util.MD5(data);
-                Md0 md0 = new Md0();
-                md0.setB16("");
-                md0.setB32(b32);
-                md0.setData(data);
+                Md2 md = new Md2();
+                md.setB16("");
+                md.setB32(b32);
+                md.setData(data);
 
                 if (dataset.contains(data)) {
                     muti.incrementAndGet();
                     return;
                 }
                 dataset.add(data);
-                list2.add(md0);
+                list2.add(md);
 
                 if (list2.size() == 1000) {
-                    md0DAO.insertBatch(list2);
+                    try {
+                        md2DAO.insertBatch(list2);
+                    } catch (Exception e) {
+                        logger.info("insert 异常", e);
+                    }
                     list2.clear();
-                    logger.info("i=" + i.get() + ",muti+" + muti.get() + ",file=" + fileName);
+                    logger.info("i=" + i.get() + ",muti=" + muti.get() + ",file=" + fileName);
                 }
 
             });
 
-            md0DAO.insertBatch(list2);
+            try {
+                md2DAO.insertBatch(list2);
+            } catch (Exception e) {
+                logger.info("insert 异常", e);
+            }
+
             list2.clear();
-            logger.info("i=" + i.get() + ",muti+" + muti.get() + ",file=" + fileName);
+            logger.info("i=" + i.get() + ",muti=" + muti.get() + ",file=" + fileName);
 
         } catch (IOException e) {
             e.printStackTrace();
