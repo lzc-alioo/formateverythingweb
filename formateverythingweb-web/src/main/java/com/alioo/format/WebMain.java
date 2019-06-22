@@ -1,7 +1,7 @@
 package com.alioo.format;
 
-import com.alioo.format.dao.Md2DAO;
-import com.alioo.format.domain.Md2;
+import com.alioo.format.dao.Md3DAO;
+import com.alioo.format.domain.Md3;
 import com.alioo.util.ExchangeUtil;
 import com.alioo.util.FileUtil;
 import com.alioo.util.MD5Util;
@@ -27,6 +27,8 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
 
+//import com.alioo.format.domain.Md3;
+
 @SpringBootApplication
 @EnableAsync
 @EnableAutoConfiguration()
@@ -37,7 +39,8 @@ public class WebMain {
 
     //    private static Md0DAO md0DAO;
 //    private static Md1DAO md1DAO;
-    private static Md2DAO md2DAO;
+//    private static Md3DAO md2DAO;
+    private static Md3DAO md3DAO;
 
     public static void main(String[] args) {
         try {
@@ -53,7 +56,7 @@ public class WebMain {
 
 //        md0DAO = SpringUtil.getBean(Md0DAO.class);
 //        md1DAO = SpringUtil.getBean(Md1DAO.class);
-        md2DAO = SpringUtil.getBean(Md2DAO.class);
+        md3DAO = SpringUtil.getBean(Md3DAO.class);
 
 //        List<md0> list = new ArrayList<>();
 //        for (int i = 0; i < 10; i++) {
@@ -88,7 +91,7 @@ public class WebMain {
         //排重dataset
         logger.info("排重dataset init ");
         Set<String> dataset = new HashSet<>(10000000);
-        loadDataSet(md2DAO, dataset);
+        loadDataSet(md3DAO, dataset);
         logger.info("排重dataset init done");
 
 
@@ -102,7 +105,7 @@ public class WebMain {
 
             logger.info("file==" + filearr[i].getPath() + "，fileCode=" + fileCode);
 //        String fileName = "/Users/alioo/Downloads/smzy_ruokonglignzidian/弱口令字典/rkolin3.TXT";
-            doFile(md2DAO, dataset, fileName, fileCode);
+            doFile(md3DAO, dataset, fileName, fileCode);
 
 
         }
@@ -118,18 +121,18 @@ public class WebMain {
 
     }
 
-    public static void loadDataSet(Md2DAO mdDAO, Set<String> dataset) {
+    public static void loadDataSet(Md3DAO mdDAO, Set<String> dataset) {
 
         int start = 0;
         int count = 10000;
 
         while (true) {
-            List<Md2> list = mdDAO.list(start, count);
+            List<Md3> list = mdDAO.list(start, count);
             if (list == null || list.isEmpty()) {
                 break;
             }
 
-            for (Md2 md : list) {
+            for (Md3 md : list) {
                 dataset.add(md.getData());
             }
 
@@ -139,13 +142,13 @@ public class WebMain {
         }
     }
 
-    public static void doFile(Md2DAO md2DAO, Set<String> dataset, String fileName, String fileCode) {
+    public static void doFile(Md3DAO md2DAO, Set<String>  dataset, String fileName, String fileCode) {
         //read file into stream, try-with-resources
         try {
             AtomicInteger i = new AtomicInteger(0);
             AtomicInteger muti = new AtomicInteger(0);
 
-            List<Md2> list2 = new ArrayList<>(1000);
+            List<Md3> list2 = new ArrayList<>(1000);
 
             Stream<String> stream = Files.lines(Paths.get(fileName), Charset.forName(fileCode));
             stream.forEach(line -> {
@@ -158,19 +161,19 @@ public class WebMain {
 
                 String data = line;
                 String b32 = MD5Util.MD5(data);
-                Md2 md = new Md2();
+                Md3 md = new Md3();
                 md.setB16("");
                 md.setB32(b32);
                 md.setData(data);
 
-                if (dataset.contains(data)) {
-                    muti.incrementAndGet();
-                    return;
-                }
-                dataset.add(data);
+//                if (dataset.contains(data)) {
+//                    muti.incrementAndGet();
+//                    return;
+//                }
+//                dataset.add(data);
                 list2.add(md);
 
-                if (list2.size() == 1000) {
+                if (list2.size() == 5000) {
                     try {
                         md2DAO.insertBatch(list2);
                     } catch (Exception e) {
