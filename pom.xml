@@ -25,7 +25,7 @@
     <properties>
         <build.file.encoding>UTF-8</build.file.encoding>
         <slf4j.version>1.7.12</slf4j.version>
-        <log4j2.version>2.3</log4j2.version>
+        <log4j2.version>2.13.3</log4j2.version>
         <disruptor.version>3.3.2</disruptor.version>
         <!--<josl-privilege.version>1.0.2-SNAPSHOT</josl-privilege.version>-->
         <o2o-commons.version>1.1-SNAPSHOT</o2o-commons.version>
