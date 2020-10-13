@@ -49,7 +49,7 @@
         <velocity-tools.version>2.0</velocity-tools.version>
         <commons-digester.version>2.1</commons-digester.version>
         <spring.version>3.2.4.RELEASE</spring.version>
-        <junit.version>4.10</junit.version>
+        <junit.version>4.13.1</junit.version>
         <joda-time.version>2.3</joda-time.version>
         <javassist.version>3.9.0.GA</javassist.version>
         <jackson.version>1.9.7</jackson.version>
