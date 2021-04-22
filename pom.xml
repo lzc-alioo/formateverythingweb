@@ -36,7 +36,7 @@
         <!--<ump.profiler.version>3.2.0</ump.profiler.version>-->
         <!--<jd.jmq.version>1.2.27</jd.jmq.version>-->
         <!--mybatis-->
-        <mybatis.version>3.0.5</mybatis.version>
+        <mybatis.version>3.5.6</mybatis.version>
         <mybatis-spring.version>1.0.1</mybatis-spring.version>
         <!-- data base -->
         <dbcp.version>1.4</dbcp.version>
